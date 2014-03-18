@@ -18,6 +18,7 @@ public class User extends UserBean implements SellerRole,BuyerRole{
 	public User(String login, String firstName, String secondName, RoleEnum role) {
 		super(login, firstName, secondName, role);
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override

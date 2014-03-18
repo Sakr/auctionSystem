@@ -3,6 +3,9 @@
  */
 package fr.auctionSystem.bean;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class AuctionBean {
 	private Long reservePrice;
 	//L'enchere a plusieurs offres
 	private List<OfferBean> listOfferBean;
+	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
 	
 	/**
 	 * @param product
@@ -100,7 +104,7 @@ public class AuctionBean {
 	 * @param reservePrice the reservePrice to set
 	 */
 	public void setReservePrice(Long reservePrice) {
-		this.reservePrice = reservePrice;
+		notifyListeners(this,  "Teste auction alerte", this.reservePrice,   this.reservePrice = reservePrice);
 	}
 	/**
 	 * @return the listOfferBean
@@ -114,8 +118,18 @@ public class AuctionBean {
 	public void setListOfferBean(List<OfferBean> listOfferBean) {
 		this.listOfferBean = listOfferBean;
 	}
-	
-	
-	
+
+	public void notifyListeners(Object object, String property,
+			Long reservePrice2, Long long1) {
+		for (PropertyChangeListener reservePriceAlert : listener) {
+	    	reservePriceAlert.propertyChange(new PropertyChangeEvent(this, "Teste auction alerte", reservePrice2, long1));
+	    }
+		
+	}
+
+	public void addChangeListener(PropertyChangeListener newListener) {
+		listener.add(newListener);
+		
+	}
 	
 }
