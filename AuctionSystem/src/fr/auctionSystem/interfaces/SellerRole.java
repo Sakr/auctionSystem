@@ -17,5 +17,6 @@ public interface SellerRole extends BuyerRole {
 	public void fixMinimumPrice();
 	/**annuler une enchere**/
 	public void cancelAuction();
+	//TODO ALert 
 	
 }
