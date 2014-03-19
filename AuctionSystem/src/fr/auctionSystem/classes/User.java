@@ -12,7 +12,7 @@ import fr.auctionSystem.util.RoleEnum;
  * @author slimem
  *
  */
-public class User extends UserBean implements SellerRole,BuyerRole{
+public class User extends UserBean implements SellerRole{
 
 
 	public User(String login, String firstName, String secondName, RoleEnum role) {

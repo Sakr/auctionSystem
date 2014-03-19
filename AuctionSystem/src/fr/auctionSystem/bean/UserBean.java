@@ -16,8 +16,6 @@ public class UserBean {
 	private String secondName;
 	private RoleEnum role;
 	
-	
-	
 	/**
 	 * @param login
 	 * @param firstName
