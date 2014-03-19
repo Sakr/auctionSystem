@@ -3,28 +3,26 @@
  */
 package fr.auctionSystem.bean;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 
 import fr.auctionSystem.util.AuctionStateEnum;
+import fr.auctionSystem.util.Horloge;
 
 /**
  * @author Sakr
  *
  */
-public class AuctionBean {
+public class AuctionBean extends Observable{
 
 	private ObjectBean product;
 	private AuctionStateEnum state;
-	private Date deadLine;
+	private Horloge deadLine;
 	private Long minimumPrice;
 	private Long reservePrice;
 	//L'enchere a plusieurs offres
 	private List<OfferBean> listOfferBean;
-	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
+	
 	
 	/**
 	 * @param product
@@ -33,11 +31,12 @@ public class AuctionBean {
 	 * @param minimumPrice
 	 * @param reservePrice
 	 * @param listOfferBean
+	 * @param listener
 	 */
 	public AuctionBean(ObjectBean product, AuctionStateEnum state,
-			Date deadLine, Long minimumPrice, Long reservePrice,
+			Horloge deadLine, Long minimumPrice, Long reservePrice,
 			List<OfferBean> listOfferBean) {
-		
+		super();
 		this.product = product;
 		this.state = state;
 		this.deadLine = deadLine;
@@ -45,7 +44,6 @@ public class AuctionBean {
 		this.reservePrice = reservePrice;
 		this.listOfferBean = listOfferBean;
 	}
-	
 	/**
 	 * @return the product
 	 */
@@ -73,13 +71,13 @@ public class AuctionBean {
 	/**
 	 * @return the deadLine
 	 */
-	public Date getDeadLine() {
+	public Horloge getDeadLine() {
 		return deadLine;
 	}
 	/**
 	 * @param deadLine the deadLine to set
 	 */
-	public void setDeadLine(Date deadLine) {
+	public void setDeadLine(Horloge deadLine) {
 		this.deadLine = deadLine;
 	}
 	/**
@@ -104,7 +102,9 @@ public class AuctionBean {
 	 * @param reservePrice the reservePrice to set
 	 */
 	public void setReservePrice(Long reservePrice) {
-		notifyListeners(this,  "Teste auction alerte", this.reservePrice,   this.reservePrice = reservePrice);
+		this.reservePrice = reservePrice;
+		setChanged();
+		notifyObservers(this.reservePrice);
 	}
 	/**
 	 * @return the listOfferBean
@@ -119,17 +119,5 @@ public class AuctionBean {
 		this.listOfferBean = listOfferBean;
 	}
 
-	public void notifyListeners(Object object, String property,
-			Long reservePrice2, Long long1) {
-		for (PropertyChangeListener reservePriceAlert : listener) {
-	    	reservePriceAlert.propertyChange(new PropertyChangeEvent(this, "Teste auction alerte", reservePrice2, long1));
-	    }
-		
-	}
-
-	public void addChangeListener(PropertyChangeListener newListener) {
-		listener.add(newListener);
-		
-	}
 	
 }

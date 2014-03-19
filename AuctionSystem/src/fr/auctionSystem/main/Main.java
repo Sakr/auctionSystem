@@ -16,8 +16,9 @@ import fr.auctionSystem.alertes.AlertManager;
 import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.bean.ObjectBean;
 import fr.auctionSystem.bean.OfferBean;
-import fr.auctionSystem.observer.AuctionObserver;
+import fr.auctionSystem.observer.AlertObserver;
 import fr.auctionSystem.util.AuctionStateEnum;
+import fr.auctionSystem.util.Horloge;
 
 /**
  * @author Sakr
@@ -30,11 +31,11 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		ObjectBean product=new ObjectBean("Teste","Teste");
-		Date date=new Date();
+		Horloge horloge=new Horloge();
 		List<OfferBean> listOfferBean =new ArrayList<OfferBean>();
-		AuctionBean auction = new AuctionBean(product, AuctionStateEnum.CREATED, date, new Long(200), new Long(200), listOfferBean);
-	    //On lance l'observeur
-		AuctionObserver observer = new AuctionObserver(auction);
+		AuctionBean auction = new AuctionBean(product, AuctionStateEnum.CREATED, horloge, new Long(200), new Long(200), listOfferBean);
+		AlertObserver alertObserver=new AlertObserver();
+		auction.addObserver(alertObserver);
 		//Teste Bidon: Lorsque le prix de reserve est superieur ou egale a 5 il notifie
 		auction.setReservePrice(new Long("2"));
 	    auction.setReservePrice(new Long("3"));
@@ -42,6 +43,9 @@ public class Main {
 	    auction.setReservePrice(new Long("5"));
 	    auction.setReservePrice(new Long("6"));
 	    auction.setReservePrice(new Long("7"));
+	    auction.setReservePrice(new Long("8"));
+	    auction.setReservePrice(new Long("9"));
+	    
 	}
 
 }
