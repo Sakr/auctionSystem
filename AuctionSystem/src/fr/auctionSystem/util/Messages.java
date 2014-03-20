@@ -9,6 +9,11 @@ package fr.auctionSystem.util;
  */
 public final class Messages {
 	
+	/**Messages for auction**/
+	public static final String USER_ALREADY_EXIST="L'utilisateur existe dèjà";
+	public static final String USER_NOT_EXIST="L'utilisateur n'existe pas";
+	public static final String AUCTION_ALREADY_PUBLISHED ="L'enchere est deja publié";
+	
 	/** Messages for buyer **/
 	public static final String AUCTION_CANCELED_MESSAGE="L'enchere a ete annulee par le vendeur";
 	public static final String AUCTION_RESERVE_PRICE_REACHED_MESSAGE="Le prix de reserve a ete atteint par une offre";

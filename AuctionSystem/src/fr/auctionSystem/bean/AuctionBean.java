@@ -3,10 +3,10 @@
  */
 package fr.auctionSystem.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import fr.auctionSystem.classes.User;
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Horloge;
 
@@ -22,8 +22,14 @@ public class AuctionBean extends Observable{
 	private Long minimumPrice;
 	private Long reservePrice;
 	//L'enchere a plusieurs offres
-	private List<OfferBean> listOfferBean;
-	private static int auctionId=0;
+	private List<OfferBean> listOfferBean=new ArrayList<OfferBean>();
+	
+	//Cette Id est id technique (un attribut de classe) qui est incrémenté a chaque fois qu'on instancie un Auctionbean
+	//Cette Id est setter dans l'id du bean lorsqu'on appel setAuctionId()
+	private static int technicalAuctionId=0;
+	
+	//cette id est l'id qui servira a identifier l'objet instancié (un attribut d'objet)
+	private int auctionId;
 	
 	
 	/**
@@ -36,15 +42,13 @@ public class AuctionBean extends Observable{
 	 * @param listener
 	 */
 	public AuctionBean(ObjectBean product, AuctionStateEnum state,
-			Horloge deadLine, Long minimumPrice, Long reservePrice,
-			List<OfferBean> listOfferBean) {
-		super();
+			Horloge deadLine, Long minimumPrice, Long reservePrice) {
 		this.product = product;
 		this.state = state;
 		this.deadLine = deadLine;
 		this.minimumPrice = minimumPrice;
 		this.reservePrice = reservePrice;
-		this.listOfferBean = listOfferBean;
+		AuctionBean.technicalAuctionId ++;
 	}
 	public AuctionBean() {
 		
@@ -52,15 +56,16 @@ public class AuctionBean extends Observable{
 	/**
 	 * @return the auctionId
 	 */
-	public static int getAuctionId() {
+	public int getAuctionId() {
 		return auctionId;
 	}
 
 	/**
 	 * @param auctionId the auctionId to set
+	 * @return 
 	 */
-	public static void setAuctionId(int auctionId) {
-		AuctionBean.auctionId ++;
+	public void setAuctionId() {
+		this.auctionId=AuctionBean.technicalAuctionId;
 	}
 	/**
 	 * @return the product
@@ -133,8 +138,10 @@ public class AuctionBean extends Observable{
 	/**
 	 * @param listOfferBean the listOfferBean to set
 	 */
-	public void setListOfferBean(List<OfferBean> listOfferBean) {
-		this.listOfferBean = listOfferBean;
+	public void addOfferBean(OfferBean offerBean) {
+		this.listOfferBean.add(offerBean);
+		setChanged();
+		notifyObservers(offerBean);
 	}
 
 	

@@ -4,6 +4,8 @@
 package fr.auctionSystem.interfaces;
 
 import fr.auctionSystem.bean.AuctionBean;
+import fr.auctionSystem.util.AuctionStateEnum;
+import fr.auctionSystem.util.Horloge;
 
 
 /**
@@ -12,9 +14,9 @@ import fr.auctionSystem.bean.AuctionBean;
  */
 public interface SellerRole extends BuyerRole {
 	/**creer une enchere **/
-	public AuctionBean createAuction();
+	public AuctionBean createAuction(AuctionStateEnum state, Horloge deadLine, Long minimumPrice, Long reservePrice);
 	/**publier cette enchere  **/
-	public void postAuction(AuctionBean auction);
+	public boolean postAuction(AuctionBean auction);
 	/**preciser un prix minimum pour son enchere**/
 	public void fixMinimumPrice(AuctionBean auction);
 	/**annuler une enchere**/

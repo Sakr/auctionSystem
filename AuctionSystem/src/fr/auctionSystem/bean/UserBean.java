@@ -77,5 +77,15 @@ public class UserBean {
 	public void setRole(RoleEnum role) {
 		this.role = role;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UserBean [login=" + login + ", firstName=" + firstName
+				+ ", secondName=" + secondName + ", role=" + role + "]";
+	}
+	
+	
 	
 }
