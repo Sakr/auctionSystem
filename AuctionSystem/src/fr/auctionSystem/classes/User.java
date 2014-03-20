@@ -4,7 +4,9 @@
 package fr.auctionSystem.classes;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fr.auctionSystem.bean.AuctionBean;
@@ -23,6 +25,7 @@ import fr.auctionSystem.util.RoleEnum;
 public class User extends UserBean implements SellerRole{
 
 	private Map<Integer,AuctionBean> mapAuctionBean=new HashMap<Integer,AuctionBean>();
+	private List<AuctionBean> listVisilbleAuctionBean=new ArrayList<AuctionBean>();
 	
 	public User(String login, String firstName, String secondName, RoleEnum role) {
 		super(login, firstName, secondName, role);
@@ -49,12 +52,22 @@ public class User extends UserBean implements SellerRole{
 
 	@Override
 	public boolean postAuction(AuctionBean auction) {
-		if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
-			auction.setState(AuctionStateEnum.PUBLISHED);
+		
+		//On verifie si l'enchere appartient a l'utilisateur
+		if(mapAuctionBean.get(auction.getAuctionId())!=null){
+			if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
+				auction.setState(AuctionStateEnum.PUBLISHED);
+				listVisilbleAuctionBean.add(auction);
+				return true;
+			}else{
+				System.out.println(Messages.AUCTION_ALREADY_PUBLISHED);
+				return false;
+			}
 		}else{
-			System.out.println(Messages.AUCTION_ALREADY_PUBLISHED);
+			System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
+			return false;
 		}
-		return !auction.getState().equals(AuctionStateEnum.PUBLISHED);
+		
 	}
 
 	@Override
@@ -71,5 +84,12 @@ public class User extends UserBean implements SellerRole{
 	@Override
 	public String toString() {
 		return "User [toString()=" + super.toString() + "]";
+	}
+
+	/**
+	 * @return the listVisilbleAuctionBean
+	 */
+	public List<AuctionBean> getListVisilbleAuctionBean() {
+		return listVisilbleAuctionBean;
 	}
 }

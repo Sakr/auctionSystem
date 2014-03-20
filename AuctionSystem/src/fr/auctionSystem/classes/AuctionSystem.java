@@ -1,9 +1,12 @@
 package fr.auctionSystem.classes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import fr.auctionSystem.manager.AuctionSystemManager;
+import fr.auctionSystem.bean.AuctionBean;
+import fr.auctionSystem.comparator.UserComparator;
 import fr.auctionSystem.util.Messages;
 import fr.auctionSystem.util.RoleEnum;
 
@@ -15,14 +18,13 @@ public class AuctionSystem {
 	
 	
 	private Map<String,User> userMap=new  HashMap<String,User>();
-	
-	private AuctionSystemManager auctionSystemManager;
+	private List<AuctionBean>visibleAuction=new ArrayList<AuctionBean>();
 	
 	/**
 	 * @param auctionSystemManager
 	 */
-	public AuctionSystem(AuctionSystemManager auctionSystemManager) {
-		this.auctionSystemManager = auctionSystemManager;
+	public AuctionSystem() {
+		
 	}
 
 	/**role
@@ -37,12 +39,28 @@ public class AuctionSystem {
 		User user=new User(login,firstName,secondName,role);
 		System.out.println(user.toString());
 		//Si il n'existe pas on l'ajoute a la map des users
-		if(auctionSystemManager.isNotInMap(user,userMap)){
+		if(isNotInMap(user,userMap)){
 			userMap.put(login,user);
 		}else{
 			System.out.println(Messages.USER_ALREADY_EXIST);
 		}
-		return auctionSystemManager.isNotInMap(user,userMap);
+		return isNotInMap(user,userMap);
+	}
+	
+	/**
+	 * @param user
+	 * @param userMap
+	 * @return boolean 
+	 */
+	private boolean isNotInMap(User user, Map<String, User> userMap) {
+		UserComparator userCamparator=new UserComparator();
+		boolean Exist=true;
+		for (String mapKey : userMap.keySet()) {
+			 if(userCamparator.compare(user,userMap.get(mapKey))!=0){
+				 Exist=false;
+			 }
+		}
+		return Exist;
 	}
 	
 	/**
@@ -75,7 +93,5 @@ public class AuctionSystem {
 	public void setUserMap(Map<String, User> userMap) {
 		this.userMap = userMap;
 	}
-	
-	
-	
+
 }

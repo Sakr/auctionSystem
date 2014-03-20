@@ -7,7 +7,6 @@ package fr.auctionSystem.main;
 import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.classes.AuctionSystem;
 import fr.auctionSystem.classes.User;
-import fr.auctionSystem.manager.AuctionSystemManager;
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Horloge;
 import fr.auctionSystem.util.RoleEnum;
@@ -22,7 +21,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		//On lance le AuctionSystem avec son Manager
-		AuctionSystem auctionSystem=new AuctionSystem(new AuctionSystemManager());
+		AuctionSystem auctionSystem=new AuctionSystem();
 		
 		//On creer un utilisateur
 		auctionSystem.createUser("login", "firstName", "secondName",RoleEnum.SELLER_BUYER);
@@ -35,9 +34,12 @@ public class Main {
 		Horloge reservePriceHorloge=new Horloge(2014,03,24,15,15,15);
 		Long minimumPrice=new Long(10); 
 		Long reservePrice=new Long(80);
-		AuctionBean auction=user.createAuction(AuctionStateEnum.CREATED,reservePriceHorloge , minimumPrice, reservePrice);
 		
-		//L'utilisateur publie son enchere
+		AuctionBean auction=user.createAuction(AuctionStateEnum.CREATED,reservePriceHorloge , minimumPrice, reservePrice);
+		//Produit bidon
+		auction.getProduct().setIdentifier("IPhone 5S");
+		auction.getProduct().setDescription("Tres bon état, 900 balles");
+		//On poste le produit
 		user.postAuction(auction);
 	}
 
