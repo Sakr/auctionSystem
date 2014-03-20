@@ -21,6 +21,10 @@ public class ObjectBean {
 		this.identifier = identifier;
 		this.description = description;
 	}
+	
+	public ObjectBean() {
+		
+	}
 	/**
 	 * @return the identifier
 	 */

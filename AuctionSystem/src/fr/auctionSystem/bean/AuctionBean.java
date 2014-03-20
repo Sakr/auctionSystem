@@ -6,6 +6,7 @@ package fr.auctionSystem.bean;
 import java.util.List;
 import java.util.Observable;
 
+import fr.auctionSystem.classes.User;
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Horloge;
 
@@ -22,6 +23,7 @@ public class AuctionBean extends Observable{
 	private Long reservePrice;
 	//L'enchere a plusieurs offres
 	private List<OfferBean> listOfferBean;
+	private static int auctionId=0;
 	
 	
 	/**
@@ -43,6 +45,22 @@ public class AuctionBean extends Observable{
 		this.minimumPrice = minimumPrice;
 		this.reservePrice = reservePrice;
 		this.listOfferBean = listOfferBean;
+	}
+	public AuctionBean() {
+		
+	}
+	/**
+	 * @return the auctionId
+	 */
+	public static int getAuctionId() {
+		return auctionId;
+	}
+
+	/**
+	 * @param auctionId the auctionId to set
+	 */
+	public static void setAuctionId(int auctionId) {
+		AuctionBean.auctionId ++;
 	}
 	/**
 	 * @return the product

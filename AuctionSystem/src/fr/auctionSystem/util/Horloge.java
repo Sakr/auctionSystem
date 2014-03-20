@@ -6,6 +6,7 @@ package fr.auctionSystem.util;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+
 /**
  * @author slimem
  * 
@@ -18,21 +19,31 @@ public class Horloge{
 	private int hour;
 	private int minute;
 	private int second;
-	private String currentDateHour;
+	private String fixedDateHour;
 	
+	/**
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @param hour
+	 * @param minute
+	 * @param second
+	 */
+	public Horloge(int year, int month, int day, int hour, int minute, int second) {
+		this.year = year;
+		this.month = month;
+		this.day = day;
+		this.hour = hour;
+		this.minute = minute;
+		this.second = second;
+		this.fixedDateHour =day+"/"+month+"/"+year+"-"+hour+":"+minute+":"+second;
+		
+	}
 	public Horloge() {
-		TimeZone timeZone = TimeZone.getTimeZone("GMT");
-		Calendar calendar = Calendar.getInstance(timeZone);
-		this.year = calendar.get(Calendar.YEAR);
-		this.month = calendar.get(Calendar.MONTH);
-		this.day = calendar.get(Calendar.DAY_OF_MONTH);
-		this.hour = calendar.get(Calendar.HOUR_OF_DAY);
-		this.minute = calendar.get(Calendar.MINUTE);
-		this.second = calendar.get(Calendar.SECOND);
-		//Le current date hour est une espece de clé fabriqué qui peux servir pour identifier l'objet dans le comparator
-		this.currentDateHour=day+"/"+month+"/"+year+"-"+hour+":"+minute+":"+second;
+		
 	}
 
+	
 	/**
 	 * @return the year
 	 */
@@ -100,7 +111,7 @@ public class Horloge{
 	 * @param minute the minute to set
 	 */
 	public void setMinute(int minute) {
-		this.minute = minute;
+		this.minute = 	minute;
 	}
 
 	/**
@@ -116,20 +127,33 @@ public class Horloge{
 	public void setSecond(int second) {
 		this.second = second;
 	}
-
+	
+	/**
+	 * @return the fixedDateHour
+	 */
+	public String getFixedDateHour() {
+		return fixedDateHour;
+	}
+	/**
+	 * @param fixedDateHour the fixedDateHour to set
+	 */
+	public void setFixedDateHour(String fixedDateHour) {
+		this.fixedDateHour = fixedDateHour;
+	}
 	/**
 	 * @return the currentDateHour
 	 */
 	public String getCurrentDateHour() {
-		return currentDateHour;
+		TimeZone timeZone = TimeZone.getTimeZone("GMT");
+		Calendar calendar = Calendar.getInstance(timeZone);
+		this.year = calendar.get(Calendar.YEAR);
+		this.month = calendar.get(Calendar.MONTH);
+		this.day = calendar.get(Calendar.DAY_OF_MONTH);
+		this.hour = calendar.get(Calendar.HOUR_OF_DAY);
+		this.minute = calendar.get(Calendar.MINUTE);
+		this.second = calendar.get(Calendar.SECOND);
+		return day+"/"+month+"/"+year+"-"+hour+":"+minute+":"+second;
 	}
 
-	/**
-	 * @param currentDateHour the currentDateHour to set
-	 */
-	public void setCurrentDateHour(String currentDateHour) {
-		this.currentDateHour = currentDateHour;
-	}
-	
 
 }
