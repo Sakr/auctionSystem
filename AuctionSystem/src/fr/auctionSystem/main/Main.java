@@ -39,8 +39,11 @@ public class Main {
 		//Produit bidon
 		auction.getProduct().setIdentifier("IPhone 5S");
 		auction.getProduct().setDescription("Tres bon état, 900 balles");
-		//On poste le produit
+		//On poste le produit, il s'ajoute sur la liste des encheres disponible sur AuctionSystem
 		user.postAuction(auction);
+		auctionSystem.getListOfVisilbleAuctionBean(user);
+		//On l'annule
+		user.cancelAuction(auction);
 	}
 
 }

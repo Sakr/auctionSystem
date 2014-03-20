@@ -17,10 +17,9 @@ public interface SellerRole extends BuyerRole {
 	public AuctionBean createAuction(AuctionStateEnum state, Horloge deadLine, Long minimumPrice, Long reservePrice);
 	/**publier cette enchere  **/
 	public boolean postAuction(AuctionBean auction);
-	/**preciser un prix minimum pour son enchere**/
-	public boolean fixMinimumPrice(AuctionBean auction);
 	/**annuler une enchere**/
 	public boolean cancelAuction(AuctionBean auction);
+	
 	//TODO ALert 
 	
 }
