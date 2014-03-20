@@ -18,7 +18,7 @@ public class AuctionSystem {
 	
 	
 	private Map<String,User> userMap=new  HashMap<String,User>();
-	private List<AuctionBean>visibleAuction=new ArrayList<AuctionBean>();
+	private Map<Integer,AuctionBean>  listVisilbleAuctionBean=new HashMap<Integer,AuctionBean>();
 	
 	/**
 	 * @param auctionSystemManager
@@ -93,5 +93,22 @@ public class AuctionSystem {
 	public void setUserMap(Map<String, User> userMap) {
 		this.userMap = userMap;
 	}
+
+	/**
+	 * @return the listVisilbleAuctionBean
+	 */
+	public Map<Integer, AuctionBean> getListVisilbleAuctionBean() {
+		for (String mapKey : userMap.keySet()) {
+			Map<Integer,AuctionBean> mapvisibleAuctionByUser=userMap.get(mapKey).getListVisilbleAuctionBean();
+			AuctionBean auction=null;
+			for (Integer visibleAuctionByUserKey : mapvisibleAuctionByUser.keySet()) {
+				auction= mapvisibleAuctionByUser.get(visibleAuctionByUserKey);
+				listVisilbleAuctionBean.put(auction.getAuctionId(), auction) ;
+			}
+			 
+		}
+		return listVisilbleAuctionBean;
+	}
+
 
 }

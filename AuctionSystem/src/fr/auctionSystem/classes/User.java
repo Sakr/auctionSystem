@@ -4,9 +4,7 @@
 package fr.auctionSystem.classes;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import fr.auctionSystem.bean.AuctionBean;
@@ -24,8 +22,8 @@ import fr.auctionSystem.util.RoleEnum;
  */
 public class User extends UserBean implements SellerRole{
 
-	private Map<Integer,AuctionBean> mapAuctionBean=new HashMap<Integer,AuctionBean>();
-	private List<AuctionBean> listVisilbleAuctionBean=new ArrayList<AuctionBean>();
+	private Map<Integer,AuctionBean> listAuctionBean=new HashMap<Integer,AuctionBean>();
+	private Map<Integer,AuctionBean>  listVisilbleAuctionBean=new HashMap<Integer,AuctionBean>();
 	
 	public User(String login, String firstName, String secondName, RoleEnum role) {
 		super(login, firstName, secondName, role);
@@ -45,7 +43,7 @@ public class User extends UserBean implements SellerRole{
 		//On lui ajoute un id
 		auction.setAuctionId();
 		//On ajoute l'enchere sur la liste des encheres avec son id en clé de l'Hashmap
-		mapAuctionBean.put(auction.getAuctionId(),auction);
+		listAuctionBean.put(auction.getAuctionId(),auction);
 		
 		return auction;
 	}
@@ -54,10 +52,10 @@ public class User extends UserBean implements SellerRole{
 	public boolean postAuction(AuctionBean auction) {
 		
 		//On verifie si l'enchere appartient a l'utilisateur
-		if(mapAuctionBean.get(auction.getAuctionId())!=null){
+		if(listAuctionBean.get(auction.getAuctionId())!=null){
 			if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
 				auction.setState(AuctionStateEnum.PUBLISHED);
-				listVisilbleAuctionBean.add(auction);
+				listVisilbleAuctionBean.put(auction.getAuctionId(),auction);
 				return true;
 			}else{
 				System.out.println(Messages.AUCTION_ALREADY_PUBLISHED);
@@ -71,11 +69,27 @@ public class User extends UserBean implements SellerRole{
 	}
 
 	@Override
-	public void fixMinimumPrice(AuctionBean auction) {
+	public boolean fixMinimumPrice(AuctionBean auction) {
+		return false;
+		
 	}
 
 	@Override
-	public void cancelAuction(AuctionBean auction) {
+	public boolean cancelAuction(AuctionBean auction) {
+		//On verifie si l'enchere appartient a l'utilisateur
+		if(listAuctionBean.get(auction.getAuctionId())!=null){
+			if(!auction.getState().equals(AuctionStateEnum.CANCELED)){
+				auction.setState(AuctionStateEnum.CANCELED);
+				listVisilbleAuctionBean.remove(auction.getAuctionId());
+				return true;
+			}else{
+				System.out.println(Messages.AUCTION_ALREADY_CANCELED);
+				return false;
+			}
+		}else{
+			System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
+			return false;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -89,7 +103,7 @@ public class User extends UserBean implements SellerRole{
 	/**
 	 * @return the listVisilbleAuctionBean
 	 */
-	public List<AuctionBean> getListVisilbleAuctionBean() {
+	public Map<Integer,AuctionBean> getListVisilbleAuctionBean() {
 		return listVisilbleAuctionBean;
 	}
 }
