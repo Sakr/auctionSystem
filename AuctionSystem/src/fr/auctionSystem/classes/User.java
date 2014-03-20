@@ -11,7 +11,7 @@ import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.bean.ObjectBean;
 import fr.auctionSystem.bean.UserBean;
 import fr.auctionSystem.interfaces.SellerRole;
-import fr.auctionSystem.manager.AuctionManager;
+import fr.auctionSystem.observer.AlertObserver;
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Horloge;
 import fr.auctionSystem.util.Messages;
@@ -35,15 +35,24 @@ public class User extends UserBean implements SellerRole{
 
 	@Override
 	public AuctionBean createAuction(AuctionStateEnum state, Horloge deadLine, Long minimumPrice, Long reservePrice) {
-		//
-		AuctionManager auctionManager=new AuctionManager();
-		//On crée l'enchere 
-		ObjectBean product=new ObjectBean();
-		AuctionBean auction=auctionManager.getAuctionBean(product,state,deadLine,minimumPrice,reservePrice);
-		//On lui ajoute un id
-		auction.setAuctionId();
-		//On ajoute l'enchere sur la liste des encheres avec son id en clé de l'Hashmap
-		listAuctionBean.put(auction.getAuctionId(),auction);
+		AuctionBean auction;
+		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
+			//On crée l'enchere 
+			ObjectBean product=new ObjectBean();
+			auction = new AuctionBean(product,state,deadLine,minimumPrice,reservePrice);
+			//alerte automatique est ajoutée sur une enchère pour prévenir le vendeur dès qu'une
+			//offre est faite sur son enchère
+			AlertObserver alertObserver=new AlertObserver();
+			auction.addObserver(alertObserver);
+			//On lui ajoute un id
+			auction.setAuctionId();
+			//On ajoute l'enchere sur la liste des encheres avec son id en clé de l'Hashmap
+			listAuctionBean.put(auction.getAuctionId(),auction);
+		}else{
+			System.out.println(Messages.NO_RIGHT_CREATE_AUCTION);
+			auction=null;
+		}
+		
 		
 		return auction;
 	}
@@ -51,45 +60,52 @@ public class User extends UserBean implements SellerRole{
 	@Override
 	public boolean postAuction(AuctionBean auction) {
 		
-		//On verifie si l'enchere appartient a l'utilisateur
-		if(listAuctionBean.get(auction.getAuctionId())!=null){
-			if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
-				auction.setState(AuctionStateEnum.PUBLISHED);
-				listVisilbleAuctionBean.put(auction.getAuctionId(),auction);
-				return true;
+		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
+			//On verifie si l'enchere appartient a l'utilisateur
+			if(listAuctionBean.get(auction.getAuctionId())!=null){
+				if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
+					auction.setState(AuctionStateEnum.PUBLISHED);
+					listVisilbleAuctionBean.put(auction.getAuctionId(),auction);
+					return true;
+				}else{
+					System.out.println(Messages.AUCTION_ALREADY_PUBLISHED);
+					return false;
+				}
 			}else{
-				System.out.println(Messages.AUCTION_ALREADY_PUBLISHED);
+				System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
 				return false;
 			}
 		}else{
-			System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
+			System.out.println(Messages.NO_RIGHT_POST_AUCTION);
 			return false;
 		}
 		
-	}
-
-	@Override
-	public boolean fixMinimumPrice(AuctionBean auction) {
-		return false;
 		
 	}
 
 	@Override
 	public boolean cancelAuction(AuctionBean auction) {
-		//On verifie si l'enchere appartient a l'utilisateur
-		if(listAuctionBean.get(auction.getAuctionId())!=null){
-			if(!auction.getState().equals(AuctionStateEnum.CANCELED)){
-				auction.setState(AuctionStateEnum.CANCELED);
-				listVisilbleAuctionBean.remove(auction.getAuctionId());
-				return true;
+		
+		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
+			//On verifie si l'enchere appartient a l'utilisateur
+			if(listAuctionBean.get(auction.getAuctionId())!=null){
+				if(!auction.getState().equals(AuctionStateEnum.CANCELED)){
+					auction.setState(AuctionStateEnum.CANCELED);
+					listVisilbleAuctionBean.remove(auction.getAuctionId());
+					return true;
+				}else{
+					System.out.println(Messages.AUCTION_ALREADY_CANCELED);
+					return false;
+				}
 			}else{
-				System.out.println(Messages.AUCTION_ALREADY_CANCELED);
+				System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
 				return false;
 			}
 		}else{
-			System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
+			System.out.println(Messages.NO_RIGHT_CANCEL_AUCTION);
 			return false;
 		}
+		
 	}
 
 	/* (non-Javadoc)

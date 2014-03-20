@@ -9,6 +9,7 @@ import java.util.Observable;
 
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Horloge;
+import fr.auctionSystem.util.Messages;
 
 /**
  * @author Sakr
@@ -119,6 +120,9 @@ public class AuctionBean extends Observable{
 	 * @return the reservePrice
 	 */
 	public Long getReservePrice() {
+		if(reservePrice==null){
+			System.out.println(Messages.NOT_YOUR_AUCTION);
+		}
 		return reservePrice;
 	}
 	/**

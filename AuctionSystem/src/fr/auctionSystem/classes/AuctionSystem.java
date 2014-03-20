@@ -80,32 +80,39 @@ public class AuctionSystem {
 		return user;
 	}
 	
-	/**
-	 * @return the userMap
-	 */
-	public Map<String, User> getUserMap() {
-		return userMap;
-	}
 
-	/**
-	 * @param userMap the userMap to set
-	 */
-	public void setUserMap(Map<String, User> userMap) {
-		this.userMap = userMap;
-	}
 
 	/**
 	 * @return the listVisilbleAuctionBean
 	 */
-	public Map<Integer, AuctionBean> getListVisilbleAuctionBean() {
+	public Map<Integer, AuctionBean> getListOfVisilbleAuctionBean(User user) {
+		UserComparator userComparator=new UserComparator();
+		//On recupere la liste des utilisateurs
 		for (String mapKey : userMap.keySet()) {
-			Map<Integer,AuctionBean> mapvisibleAuctionByUser=userMap.get(mapKey).getListVisilbleAuctionBean();
+			
+			//On recupere la liste des encheres publiées par chacun
+			User currentUser=userMap.get(mapKey);
+			Map<Integer,AuctionBean> mapvisibleAuctionByUser=currentUser.getListVisilbleAuctionBean();
 			AuctionBean auction=null;
-			for (Integer visibleAuctionByUserKey : mapvisibleAuctionByUser.keySet()) {
-				auction= mapvisibleAuctionByUser.get(visibleAuctionByUserKey);
-				listVisilbleAuctionBean.put(auction.getAuctionId(), auction) ;
+			
+			//Si l'utilisateur possede des encheres publiées
+			if(!mapvisibleAuctionByUser.isEmpty()){
+				
+				//On les ajoutes sur la liste qui sera visible par tous les membres du systemes
+				for (Integer visibleAuctionByUserKey : mapvisibleAuctionByUser.keySet()) {
+					auction= mapvisibleAuctionByUser.get(visibleAuctionByUserKey);
+					
+					//Si l'utilisateur passé en parametre n'est pas celui qui possede la liste des enchers qu'on est entrain de parcourir
+					//Il a pas le droit de voir le prix de reserve de l'enchere
+					if(!(userComparator.compare(user, currentUser)==0)){
+						auction.setReservePrice(null);
+					}
+					listVisilbleAuctionBean.put(auction.getAuctionId(), auction) ;
+				}
 			}
-			 
+		}
+		if(!listVisilbleAuctionBean.isEmpty()){
+			System.out.println(Messages.NO_VISIBLE_AUCTION);
 		}
 		return listVisilbleAuctionBean;
 	}
