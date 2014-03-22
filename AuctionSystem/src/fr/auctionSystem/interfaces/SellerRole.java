@@ -20,6 +20,4 @@ public interface SellerRole extends BuyerRole {
 	/**annuler une enchere**/
 	public boolean cancelAuction(AuctionBean auction);
 	
-	//TODO ALert 
-	
 }

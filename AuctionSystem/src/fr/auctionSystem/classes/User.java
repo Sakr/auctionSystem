@@ -91,6 +91,7 @@ public class User extends UserBean implements SellerRole{
 			if(listAuctionBean.get(auction.getAuctionId())!=null){
 				if(!auction.getState().equals(AuctionStateEnum.CANCELED)){
 					auction.setState(AuctionStateEnum.CANCELED);
+					//On retire l'enchere de la liste des encheres visible
 					listVisilbleAuctionBean.remove(auction.getAuctionId());
 					return true;
 				}else{

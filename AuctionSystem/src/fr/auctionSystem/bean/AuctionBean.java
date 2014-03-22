@@ -120,7 +120,7 @@ public class AuctionBean extends Observable{
 	 * @return the reservePrice
 	 */
 	public Long getReservePrice() {
-		if(reservePrice==null){
+		if(reservePrice==-1L){
 			System.out.println(Messages.NOT_YOUR_AUCTION);
 		}
 		return reservePrice;
@@ -146,6 +146,16 @@ public class AuctionBean extends Observable{
 		this.listOfferBean.add(offerBean);
 		setChanged();
 		notifyObservers(offerBean);
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AuctionBean [product=" + product + ", state=" + state
+				+ ", deadLine=" + deadLine + ", minimumPrice=" + minimumPrice
+				+ ", reservePrice=" + reservePrice + ", listOfferBean="
+				+ listOfferBean + ", auctionId=" + auctionId + "]";
 	}
 
 	

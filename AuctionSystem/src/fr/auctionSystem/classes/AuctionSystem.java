@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.auctionSystem.bean.AuctionBean;
-import fr.auctionSystem.comparator.UserComparator;
+import fr.auctionSystem.comparator.ObjectComparator;
 import fr.auctionSystem.util.Messages;
 import fr.auctionSystem.util.RoleEnum;
 
@@ -39,12 +39,12 @@ public class AuctionSystem {
 		User user=new User(login,firstName,secondName,role);
 		System.out.println(user.toString());
 		//Si il n'existe pas on l'ajoute a la map des users
-		if(isNotInMap(user,userMap)){
+		if(!isInMap(user)){
 			userMap.put(login,user);
 		}else{
 			System.out.println(Messages.USER_ALREADY_EXIST);
 		}
-		return isNotInMap(user,userMap);
+		return isInMap(user);
 	}
 	
 	/**
@@ -52,12 +52,12 @@ public class AuctionSystem {
 	 * @param userMap
 	 * @return boolean 
 	 */
-	private boolean isNotInMap(User user, Map<String, User> userMap) {
-		UserComparator userCamparator=new UserComparator();
-		boolean Exist=true;
+	private boolean isInMap(User user) {
+		ObjectComparator userCamparator=new ObjectComparator();
+		boolean Exist=false;
 		for (String mapKey : userMap.keySet()) {
-			 if(userCamparator.compare(user,userMap.get(mapKey))!=0){
-				 Exist=false;
+			 if(userCamparator.compare(user,userMap.get(mapKey))==0){
+				 Exist=true;
 			 }
 		}
 		return Exist;
@@ -86,13 +86,15 @@ public class AuctionSystem {
 	 * @return the listVisilbleAuctionBean
 	 */
 	public Map<Integer, AuctionBean> getListOfVisilbleAuctionBean(User user) {
-		UserComparator userComparator=new UserComparator();
-		//On recupere la liste des utilisateurs
+		ObjectComparator userComparator=new ObjectComparator();
+		//On recupere la liste des utilisateurs 
+		User userFromMap=null;
+		Map<Integer,AuctionBean> mapvisibleAuctionByUser=null;
 		for (String mapKey : userMap.keySet()) {
 			
-			//On recupere la liste des encheres publiées par chacun
-			User currentUser=userMap.get(mapKey);
-			Map<Integer,AuctionBean> mapvisibleAuctionByUser=currentUser.getListVisilbleAuctionBean();
+			//On recupere la liste des encheres publiées par chacun des utilisateurs
+			userFromMap=userMap.get(mapKey);
+			mapvisibleAuctionByUser=userFromMap.getListVisilbleAuctionBean();
 			AuctionBean auction=null;
 			
 			//Si l'utilisateur possede des encheres publiées
@@ -104,14 +106,14 @@ public class AuctionSystem {
 					
 					//Si l'utilisateur passé en parametre n'est pas celui qui possede la liste des enchers qu'on est entrain de parcourir
 					//Il a pas le droit de voir le prix de reserve de l'enchere
-					if(!(userComparator.compare(user, currentUser)==0)){
-						auction.setReservePrice(null);
+					if(!(userComparator.compare(user, userFromMap)==0)){
+						auction.setReservePrice(-1L);
 					}
 					listVisilbleAuctionBean.put(auction.getAuctionId(), auction) ;
 				}
 			}
 		}
-		if(!listVisilbleAuctionBean.isEmpty()){
+		if(listVisilbleAuctionBean.isEmpty()){
 			System.out.println(Messages.NO_VISIBLE_AUCTION);
 		}
 		return listVisilbleAuctionBean;
