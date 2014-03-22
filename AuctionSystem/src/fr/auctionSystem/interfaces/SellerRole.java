@@ -19,5 +19,7 @@ public interface SellerRole extends BuyerRole {
 	public boolean postAuction(AuctionBean auction);
 	/**annuler une enchere**/
 	public boolean cancelAuction(AuctionBean auction);
+	/**preciser un prix minimum pour son encher**/
+	//public boolean specifyMinimumPriceForAuction(AuctionBean auction, Long minimumPrice);
 	
 }

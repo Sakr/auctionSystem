@@ -4,9 +4,12 @@
 package fr.auctionSystem.classes;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import fr.auctionSystem.bean.AlertBean;
 import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.bean.ObjectBean;
 import fr.auctionSystem.bean.OfferBean;
@@ -24,7 +27,8 @@ import fr.auctionSystem.util.RoleEnum;
 public class User extends UserBean implements SellerRole{
 
 	private Map<Integer,AuctionBean> listAuctionBean=new HashMap<Integer,AuctionBean>();
-	private Map<Integer,AuctionBean>  listVisilbleAuctionBean=new HashMap<Integer,AuctionBean>();
+	private List<AlertBean> listAlertBean=new ArrayList<AlertBean>(); 
+	private AlertObserver alertObserver;
 	
 	public User(String login, String firstName, String secondName, RoleEnum role) {
 		super(login, firstName, secondName, role);
@@ -33,15 +37,14 @@ public class User extends UserBean implements SellerRole{
 	@Override
 	public boolean issueOffer(AuctionBean auction, Long price) {
 		
-		//On créer l'offre
-		OfferBean offerBean=null;
-
 		//Si l'encher n'appartient pas a l'utilisateur
 		if(listAuctionBean.get(auction.getAuctionId())==null){
 			
-			//Si l'enchere est publiée
+			//Si l'enchere est publiee
 			if(auction.getState().equals(AuctionStateEnum.PUBLISHED)){
 				
+				//On creer l'offre
+				OfferBean offerBean=null;
 				//Il n'est pas possible d'emmettre une offre au dessous du prix minimum
 				if(price>auction.getMinimumPrice()){
 					offerBean=new OfferBean(price,this);
@@ -71,7 +74,7 @@ public class User extends UserBean implements SellerRole{
 			auction = new AuctionBean(product,state,deadLine,minimumPrice,reservePrice);
 			//alerte automatique est ajoutée sur une enchère pour prévenir le vendeur dès qu'une
 			//offre est faite sur son enchère
-			AlertObserver alertObserver=new AlertObserver();
+			alertObserver=new AlertObserver();
 			auction.addObserver(alertObserver);
 			//On lui ajoute un id
 			auction.setAuctionId();
@@ -94,7 +97,6 @@ public class User extends UserBean implements SellerRole{
 			if(listAuctionBean.get(auction.getAuctionId())!=null){
 				if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
 					auction.setState(AuctionStateEnum.PUBLISHED);
-					listVisilbleAuctionBean.put(auction.getAuctionId(),auction);
 					return true;
 				}else{
 					System.out.println(Messages.AUCTION_ALREADY_PUBLISHED);
@@ -120,8 +122,6 @@ public class User extends UserBean implements SellerRole{
 			if(listAuctionBean.get(auction.getAuctionId())!=null){
 				if(!auction.getState().equals(AuctionStateEnum.CANCELED)){
 					auction.setState(AuctionStateEnum.CANCELED);
-					//On retire l'enchere de la liste des encheres visible
-					listVisilbleAuctionBean.remove(auction.getAuctionId());
 					return true;
 				}else{
 					System.out.println(Messages.AUCTION_ALREADY_CANCELED);
@@ -137,6 +137,16 @@ public class User extends UserBean implements SellerRole{
 		}
 		
 	}
+	
+	
+
+	/**
+	 * @return the listAuctionBean
+	 */
+	public Map<Integer, AuctionBean> getListAuctionBean() {
+		return listAuctionBean;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -146,28 +156,40 @@ public class User extends UserBean implements SellerRole{
 		return "User [toString()=" + super.toString() + "]";
 	}
 
-	/**
-	 * @return the listVisilbleAuctionBean
-	 */
-	public Map<Integer,AuctionBean> getListVisilbleAuctionBean() {
-		return listVisilbleAuctionBean;
+	@Override
+	public boolean addPriceReserveAlert(boolean value,AuctionBean auctionBean) {
+		if(this.getRole().equals(RoleEnum.BUYER)|| this.getRole().equals(RoleEnum.SELLER_BUYER)){
+			this.addObserver(alertObserver);
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
-	public boolean addPriceReserveAlert(boolean value) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean addAuctionCanceledBySellerAlert(boolean value,AuctionBean auctionBean) {
+		if(this.getRole().equals(RoleEnum.BUYER)|| this.getRole().equals(RoleEnum.SELLER_BUYER)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
-	public boolean addAuctionCanceledBySellerAlert(boolean value) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean addAnotherGreaterOfferAlert(boolean value,AuctionBean auctionBean) {
+		if(this.getRole().equals(RoleEnum.BUYER)|| this.getRole().equals(RoleEnum.SELLER_BUYER)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
-	public boolean addAnotherGreaterOfferAlert(boolean value) {
-		// TODO Auto-generated method stub
-		return false;
+	public List<AlertBean> getListLaunchedAlert() {
+		for(AlertBean alertBean: alertObserver.getListAlert()){
+			listAlertBean.add(alertBean);
+		}
+		return listAlertBean;
 	}
+
 }

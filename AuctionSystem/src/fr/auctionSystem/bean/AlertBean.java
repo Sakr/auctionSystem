@@ -11,6 +11,7 @@ package fr.auctionSystem.bean;
 public class AlertBean {
 	private String message;
 	
+	
 	/**
 	 * @param message
 	 */

@@ -44,15 +44,15 @@ public class Main {
 		Long minimumPrice=new Long(10); 
 		Long reservePrice=new Long(80);
 		
-		AuctionBean auction=user.createAuction(AuctionStateEnum.CREATED,reservePriceHorloge , minimumPrice, reservePrice);
+		AuctionBean auction1=user.createAuction(AuctionStateEnum.CREATED,reservePriceHorloge , minimumPrice, reservePrice);
 		//Produit bidon
-		auction.getProduct().setIdentifier("IPhone 5S");
-		auction.getProduct().setDescription("Tres bon état, 900 balles");
+		auction1.getProduct().setIdentifier("IPhone 5S");
+		auction1.getProduct().setDescription("Tres bon état, 900 balles");
 		//On poste le produit, il s'ajoute sur la liste des encheres disponible sur AuctionSystem
-		user.postAuction(auction);
+		user.postAuction(auction1);
 		
 		//Si c'est le l'autre utilisateur qui essaye de la publiée =>Ca passe pas
-		user2.postAuction(auction);
+		user2.postAuction(auction1);
 		
 		AuctionBean auction2=user2.createAuction(AuctionStateEnum.CREATED,reservePriceHorloge , minimumPrice, reservePrice);
 		//Produit bidon 2
@@ -60,11 +60,16 @@ public class Main {
 		auction2.getProduct().setDescription("2- Tres bon état, 900 balles");
 		//On poste le produit, il s'ajoute sur la liste des encheres disponible sur AuctionSystem
 		user2.postAuction(auction2);
+		
+		//L'utilisateur essaye d'ajouter une offre sur son enchere => ca passe pas
 		user2.issueOffer(auction2,new Long(50));
+		
+		//L'utilisateur essaye d'ajouter une offre sur autre encher du systeme => ca passe
+		user2.issueOffer(auction1,new Long(50));
 		
 		//cette liste va chercher en fonction de l'utilisateur les encheres visibles, en masquant le prix de reserve sur les encheres qui ne lui appartient pas
 		//Map<Integer, AuctionBean>  mapTesteVisible=auctionSystem.getListOfVisilbleAuctionBean(user2);
-		Map<Integer, AuctionBean>  mapTesteVisible=auctionSystem.getListOfVisilbleAuctionBean(user2);
+		Map<Integer, AuctionBean>  mapTesteVisible=auctionSystem.getListOfVisilbleAuctionForUser(user2);
 		AuctionBean visibleAuction;
 		for (Integer mapKey : mapTesteVisible.keySet()) {
 			 visibleAuction= mapTesteVisible.get(mapKey);
@@ -77,7 +82,7 @@ public class Main {
 //		//Si c'est un autre utilisateur qui essaye de la lui annuler => ca passe pas
 //		user2.cancelAuction(auction);
 //		
-//		//On annule la premiere enchere
+//		//On annule la deuxieme enchere
 //		user2.cancelAuction(auction2);
 	}
 

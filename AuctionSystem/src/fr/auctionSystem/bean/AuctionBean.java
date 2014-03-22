@@ -143,7 +143,7 @@ public class AuctionBean extends Observable{
 	 * @param listOfferBean the listOfferBean to set
 	 */
 	public void addOfferBean(OfferBean offerBean) {
-		//Alerte automatique des qu'une offre est ajoutée
+		//Alerte automatique des qu'une offre est ajoute
 		this.listOfferBean.add(offerBean);
 		setChanged();
 		notifyObservers(offerBean);

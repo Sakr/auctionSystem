@@ -3,19 +3,20 @@
  */
 package fr.auctionSystem.bean;
 
+import java.util.Observable;
+
 import fr.auctionSystem.util.RoleEnum;
 
 /**
  * @author Sakr
  *
  */
-public class UserBean {
+public class UserBean extends Observable{
 	
 	private String login;
 	private String firstName;
 	private String secondName;
 	private RoleEnum role;
-	
 	/**
 	 * @param login
 	 * @param firstName
@@ -29,6 +30,7 @@ public class UserBean {
 		this.secondName = secondName;
 		this.role = role;
 	}
+
 	/**
 	 * @return the login
 	 */
