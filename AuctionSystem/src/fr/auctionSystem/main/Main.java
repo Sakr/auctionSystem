@@ -10,7 +10,7 @@ import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.classes.AuctionSystem;
 import fr.auctionSystem.classes.User;
 import fr.auctionSystem.util.AuctionStateEnum;
-import fr.auctionSystem.util.Horloge;
+import fr.auctionSystem.util.Clock;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
@@ -40,7 +40,7 @@ public class Main {
 		System.out.println(user2.toString());
 		
 		//Cette utilisateur crée une enchere
-		Horloge reservePriceHorloge=new Horloge(2014,03,24,15,15,15);
+		Clock reservePriceHorloge=new Clock(2014,03,24,15,15,15);
 		Long minimumPrice=new Long(10); 
 		Long reservePrice=new Long(80);
 		
@@ -51,13 +51,16 @@ public class Main {
 		//On poste le produit, il s'ajoute sur la liste des encheres disponible sur AuctionSystem
 		user.postAuction(auction);
 		
+		//Si c'est le l'autre utilisateur qui essaye de la publiée =>Ca passe pas
+		user2.postAuction(auction);
+		
 		AuctionBean auction2=user2.createAuction(AuctionStateEnum.CREATED,reservePriceHorloge , minimumPrice, reservePrice);
 		//Produit bidon 2
 		auction2.getProduct().setIdentifier("2- IPhone 5S");
 		auction2.getProduct().setDescription("2- Tres bon état, 900 balles");
 		//On poste le produit, il s'ajoute sur la liste des encheres disponible sur AuctionSystem
 		user2.postAuction(auction2);
-		
+		user2.issueOffer(auction2,new Long(50));
 		
 		//cette liste va chercher en fonction de l'utilisateur les encheres visibles, en masquant le prix de reserve sur les encheres qui ne lui appartient pas
 		//Map<Integer, AuctionBean>  mapTesteVisible=auctionSystem.getListOfVisilbleAuctionBean(user2);
@@ -65,13 +68,17 @@ public class Main {
 		AuctionBean visibleAuction;
 		for (Integer mapKey : mapTesteVisible.keySet()) {
 			 visibleAuction= mapTesteVisible.get(mapKey);
-			 System.out.println(visibleAuction.toString());
+			 System.out.println(visibleAuction.getReservePrice());
 		}
 		
-		//On l'annule
-		user.cancelAuction(auction);
-		//On l'annule
-		user2.cancelAuction(auction2);
+//		//On l'annule
+//		user.cancelAuction(auction);
+//		
+//		//Si c'est un autre utilisateur qui essaye de la lui annuler => ca passe pas
+//		user2.cancelAuction(auction);
+//		
+//		//On annule la premiere enchere
+//		user2.cancelAuction(auction2);
 	}
 
 }

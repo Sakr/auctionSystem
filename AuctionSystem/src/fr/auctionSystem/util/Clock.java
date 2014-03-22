@@ -11,7 +11,7 @@ import java.util.TimeZone;
  * @author slimem
  * 
  */
-public class Horloge{
+public class Clock{
 
 	private int year;
 	private int month;
@@ -29,7 +29,7 @@ public class Horloge{
 	 * @param minute
 	 * @param second
 	 */
-	public Horloge(int year, int month, int day, int hour, int minute, int second) {
+	public Clock(int year, int month, int day, int hour, int minute, int second) {
 		this.year = year;
 		this.month = month;
 		this.day = day;
@@ -39,7 +39,7 @@ public class Horloge{
 		this.fixedDateHour =day+"/"+month+"/"+year+"-"+hour+":"+minute+":"+second;
 		
 	}
-	public Horloge() {
+	public Clock() {
 		
 	}
 

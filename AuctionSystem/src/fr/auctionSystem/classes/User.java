@@ -9,11 +9,12 @@ import java.util.Map;
 
 import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.bean.ObjectBean;
+import fr.auctionSystem.bean.OfferBean;
 import fr.auctionSystem.bean.UserBean;
 import fr.auctionSystem.interfaces.SellerRole;
 import fr.auctionSystem.observer.AlertObserver;
 import fr.auctionSystem.util.AuctionStateEnum;
-import fr.auctionSystem.util.Horloge;
+import fr.auctionSystem.util.Clock;
 import fr.auctionSystem.util.Messages;
 import fr.auctionSystem.util.RoleEnum;
 /**
@@ -30,11 +31,39 @@ public class User extends UserBean implements SellerRole{
 	}
 
 	@Override
-	public void issueOffer(AuctionBean auction) {
+	public boolean issueOffer(AuctionBean auction, Long price) {
+		
+		//On créer l'offre
+		OfferBean offerBean=null;
+
+		//Si l'encher n'appartient pas a l'utilisateur
+		if(listAuctionBean.get(auction.getAuctionId())==null){
+			
+			//Si l'enchere est publiée
+			if(auction.getState().equals(AuctionStateEnum.PUBLISHED)){
+				
+				//Il n'est pas possible d'emmettre une offre au dessous du prix minimum
+				if(price>auction.getMinimumPrice()){
+					offerBean=new OfferBean(price,this);
+					auction.addOfferBean(offerBean);
+					return true;
+				}else{
+					System.out.println(Messages.NO_RIGHT_ISSUE_OFFER_BELOW_MINIMUM_PRICE);
+					return false;
+				}
+				
+			}else{
+				System.out.println(Messages.NO_RIGHT_ISSUE_OFFER_NOT_PUBLISHED);
+				return false;
+			}
+		}else{//sinon il n'a pas le droit d'emmetre des offres dessus
+			System.out.println(Messages.NO_RIGHT_ISSUE_OFFER);
+			return false;
+		}
 	}
 
 	@Override
-	public AuctionBean createAuction(AuctionStateEnum state, Horloge deadLine, Long minimumPrice, Long reservePrice) {
+	public AuctionBean createAuction(AuctionStateEnum state, Clock deadLine, Long minimumPrice, Long reservePrice) {
 		AuctionBean auction;
 		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
 			//On crée l'enchere 
@@ -122,5 +151,23 @@ public class User extends UserBean implements SellerRole{
 	 */
 	public Map<Integer,AuctionBean> getListVisilbleAuctionBean() {
 		return listVisilbleAuctionBean;
+	}
+
+	@Override
+	public boolean addPriceReserveAlert(boolean value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAuctionCanceledBySellerAlert(boolean value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAnotherGreaterOfferAlert(boolean value) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

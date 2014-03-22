@@ -9,7 +9,7 @@ import fr.auctionSystem.bean.AuctionBean;
  * @author Sakr
  *
  */
-public interface BuyerRole {
+public interface BuyerRole extends BuyerAlerter{
 	/**emettre une offre pour une enchere publiee**/
-	public void issueOffer(AuctionBean auction);
+	public boolean issueOffer(AuctionBean auction, Long price);
 }

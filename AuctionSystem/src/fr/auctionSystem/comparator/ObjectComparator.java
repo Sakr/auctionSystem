@@ -6,7 +6,7 @@ package fr.auctionSystem.comparator;
 import java.util.Comparator;
 
 import fr.auctionSystem.classes.User;
-import fr.auctionSystem.util.Horloge;
+import fr.auctionSystem.util.Clock;
 
 /**
  * @author slimem
@@ -24,10 +24,10 @@ public  class ObjectComparator implements Comparator<Object>{
 			User user2= (User)o2;
 			comparatorReturn= user.getLogin().equalsIgnoreCase(user2.getLogin());
 		}
-		else if(o1 instanceof Horloge){
+		else if(o1 instanceof Clock){
 			
-			Horloge horloge=(Horloge)o1;
-			Horloge horloge2=(Horloge)o2;
+			Clock horloge=(Clock)o1;
+			Clock horloge2=(Clock)o2;
 			comparatorReturn= horloge.getCurrentDateHour().equalsIgnoreCase(horloge2.getCurrentDateHour());
 		}
 		return ((comparatorReturn) ? 0 : 1);

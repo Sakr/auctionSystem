@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Observable;
 
 import fr.auctionSystem.util.AuctionStateEnum;
-import fr.auctionSystem.util.Horloge;
+import fr.auctionSystem.util.Clock;
 import fr.auctionSystem.util.Messages;
 
 /**
@@ -19,7 +19,7 @@ public class AuctionBean extends Observable{
 
 	private ObjectBean product;
 	private AuctionStateEnum state;
-	private Horloge deadLine;
+	private Clock deadLine;
 	private Long minimumPrice;
 	private Long reservePrice;
 	//L'enchere a plusieurs offres
@@ -43,7 +43,7 @@ public class AuctionBean extends Observable{
 	 * @param listener
 	 */
 	public AuctionBean(ObjectBean product, AuctionStateEnum state,
-			Horloge deadLine, Long minimumPrice, Long reservePrice) {
+			Clock deadLine, Long minimumPrice, Long reservePrice) {
 		this.product = product;
 		this.state = state;
 		this.deadLine = deadLine;
@@ -95,13 +95,13 @@ public class AuctionBean extends Observable{
 	/**
 	 * @return the deadLine
 	 */
-	public Horloge getDeadLine() {
+	public Clock getDeadLine() {
 		return deadLine;
 	}
 	/**
 	 * @param deadLine the deadLine to set
 	 */
-	public void setDeadLine(Horloge deadLine) {
+	public void setDeadLine(Clock deadLine) {
 		this.deadLine = deadLine;
 	}
 	/**
@@ -143,6 +143,7 @@ public class AuctionBean extends Observable{
 	 * @param listOfferBean the listOfferBean to set
 	 */
 	public void addOfferBean(OfferBean offerBean) {
+		//Alerte automatique des qu'une offre est ajoutée
 		this.listOfferBean.add(offerBean);
 		setChanged();
 		notifyObservers(offerBean);
