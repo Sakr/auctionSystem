@@ -4,156 +4,52 @@
 package fr.auctionSystem.util;
 
 import java.util.Calendar;
-import java.util.TimeZone;
+import java.util.Date;
+import java.util.Observable;
 
 
 /**
  * @author slimem
  * 
  */
-public class Clock{
+public class Clock extends Observable{
 
-	private int year;
-	private int month;
-	private int day;
-	private int hour;
-	private int minute;
-	private int second;
-	private String fixedDateHour;
+	
+	private Date currentDate;
+	
+	
 	
 	/**
-	 * @param year
-	 * @param month
-	 * @param day
-	 * @param hour
-	 * @param minute
-	 * @param second
+	 * @param currentDate
 	 */
-	public Clock(int year, int month, int day, int hour, int minute, int second) {
-		this.year = year;
-		this.month = month;
-		this.day = day;
-		this.hour = hour;
-		this.minute = minute;
-		this.second = second;
-		this.fixedDateHour =day+"/"+month+"/"+year+"-"+hour+":"+minute+":"+second;
+	public Clock(Date currentDate) {
+		setCurrentDate(currentDate);
+	}
+
+	public static Date addDays(Date date,int days){
+		Calendar cal=Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE,days);
 		
-	}
-	public Clock() {
-		
-	}
-
-	
-	/**
-	 * @return the year
-	 */
-	public int getYear() {
-		return year;
+		return cal.getTime();
 	}
 
 	/**
-	 * @param year the year to set
+	 * @return the currentDate
 	 */
-	public void setYear(int year) {
-		this.year = year;
+	public Date getCurrentDate() {
+		return currentDate;
 	}
 
 	/**
-	 * @return the month
+	 * @param currentDate the currentDate to set
 	 */
-	public int getMonth() {
-		return month;
-	}
-
-	/**
-	 * @param month the month to set
-	 */
-	public void setMonth(int month) {
-		this.month = month;
-	}
-
-	/**
-	 * @return the day
-	 */
-	public int getDay() {
-		return day;
-	}
-
-	/**
-	 * @param day the day to set
-	 */
-	public void setDay(int day) {
-		this.day = day;
-	}
-
-	/**
-	 * @return the hour
-	 */
-	public int getHour() {
-		return hour;
-	}
-
-	/**
-	 * @param hour the hour to set
-	 */
-	public void setHour(int hour) {
-		this.hour = hour;
-	}
-
-	/**
-	 * @return the minute
-	 */
-	public int getMinute() {
-		return minute;
-	}
-
-	/**
-	 * @param minute the minute to set
-	 */
-	public void setMinute(int minute) {
-		this.minute = 	minute;
-	}
-
-	/**
-	 * @return the second
-	 */
-	public int getSecond() {
-		return second;
-	}
-
-	/**
-	 * @param second the second to set
-	 */
-	public void setSecond(int second) {
-		this.second = second;
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+		setChanged();
+		notifyObservers(this.currentDate);
 	}
 	
-	/**
-	 * @return the fixedDateHour
-	 */
-	public String getFixedDateHour() {
-		return fixedDateHour;
-	}
-	/**
-	 * @param fixedDateHour the fixedDateHour to set
-	 */
-	public void setFixedDateHour(String fixedDateHour) {
-		this.fixedDateHour = fixedDateHour;
-	}
-	/**
-	 * @return the currentDateHour
-	 */
-	public String getCurrentDateHour() {
-		TimeZone timeZone = TimeZone.getTimeZone("GMT");
-		Calendar calendar = Calendar.getInstance(timeZone);
-		this.year = calendar.get(Calendar.YEAR);
-		this.month = calendar.get(Calendar.MONTH);
-		this.day = calendar.get(Calendar.DAY_OF_MONTH);
-		this.hour = calendar.get(Calendar.HOUR_OF_DAY);
-		this.minute = calendar.get(Calendar.MINUTE);
-		this.second = calendar.get(Calendar.SECOND);
-		return day+"/"+month+"/"+year+"-"+hour+":"+minute+":"+second;
-	}
-
+	
 
 }

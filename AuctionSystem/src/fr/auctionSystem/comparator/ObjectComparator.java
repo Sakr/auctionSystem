@@ -28,7 +28,7 @@ public  class ObjectComparator implements Comparator<Object>{
 			
 			Clock horloge=(Clock)o1;
 			Clock horloge2=(Clock)o2;
-			comparatorReturn= horloge.getCurrentDateHour().equalsIgnoreCase(horloge2.getCurrentDateHour());
+			comparatorReturn= horloge.getCurrentDate().equals(horloge2.getCurrentDate());
 		}
 		return ((comparatorReturn) ? 0 : 1);
 	}

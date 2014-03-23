@@ -9,43 +9,99 @@ import java.util.Observable;
 import java.util.Observer;
 
 import fr.auctionSystem.bean.AlertBean;
+import fr.auctionSystem.bean.AlertContextBean;
 import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.bean.OfferBean;
-import fr.auctionSystem.bean.UserBean;
+import fr.auctionSystem.classes.User;
+import fr.auctionSystem.comparator.ObjectComparator;
+import fr.auctionSystem.util.AlertType;
+import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Messages;
 
 /**
  * @author slimem
  *
  */
-public class AlertObserver  implements Observer {
+public class AlertObserver extends AlertContextBean implements Observer {
+	
+	public AlertObserver(Object alertObject, User alertUser,
+			AlertType alertType) {
+		super(alertObject, alertUser, alertType);
+	}
+
 	/**
 	 * Cette classe observe et enregistre un historique des alertes dans une liste
 	 */
 	private List<AlertBean> listAlert=new ArrayList<AlertBean>(); 
-	
 
 	@Override
 	public void update(Observable obs, Object obj) {
 		
-		//Alert ajoutee automatiquement sur les encheres pour prevenir a chaque fois qu'il y'a une offre 
 		if(obs instanceof AuctionBean){
 			
-			if(obj instanceof Long){
-				Long reservePrice=(Long)obj;
-				//reserve price achieved by offering 
-			}else if(obj instanceof OfferBean){
-				OfferBean offerBean=(OfferBean)obj;
-				listAlert.add(new AlertBean(Messages.OFFER_DONE_ON_AUTION));
-				System.out.println("Alert --> "+Messages.OFFER_DONE_ON_AUTION+" par "+offerBean.getUserBean().getFirstName()+" "+offerBean.getUserBean().getSecondName());
+			AuctionBean auctionBean=(AuctionBean)obs;
+			AlertBean alertBean =getAlertBean(obj, auctionBean);
+			if(alertBean!=null){
+				System.out.println(alertBean.getMessage());
 			}
-			
-		//Alert ajouté par l'utilisateur	
-		}else if(obj instanceof UserBean){
-			
 		}
 	}
+	
+	/**
+	 * @param obj
+	 * @param auctionBean
+	 * @return AlertBean 
+	 */
+	private AlertBean getAlertBean(Object obj, AuctionBean auctionBean) {
+		
+		AlertBean alert=null;
+		if(obj instanceof OfferBean){
+			
+			if (AlertType.ALERT_AUTOMATIC.equals(this.getAlertType())){
+				OfferBean offerBean=(OfferBean)obj;
+				alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.OFFER_DONE_ON_AUCTION + auctionBean.getProduct().getIdentifier() + Messages.OFFER_DONE_ON_AUCTION_PRODUCT + offerBean.getPrice() + Messages.DEVISE);
+			}
+			else if(AlertType.ALERT_PRICE_RESERVE.equals(this.getAlertType())){
+				
+				for(OfferBean offerBean:auctionBean.getListOfferBean()){
+					if(offerBean.getPrice()>=auctionBean.getReservePrice()){
+						System.out.println();
+						alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.RESERVE_PRICE_REACHED_BY_OFFER);
+						break;
+					}
+				}
+				
+			}else if(AlertType.ALERT_GREATER_OFFER.equals(this.getAlertType())){
+				OfferBean currentOfferFromAuction=(OfferBean)obj;
+				for(OfferBean offerBean:auctionBean.getListOfferBean()){
+					//L'offre que l'utilisateur a sur cette enchere 
+					ObjectComparator objectComparator=new ObjectComparator();
+					if(objectComparator.compare(offerBean.getUserBean(), this.getAlertUser())==0){
+						if(currentOfferFromAuction.getPrice()>=offerBean.getPrice()){
+							alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.AUCTION_PRICE_CHANGED_MESSAGE + auctionBean.getProduct().getIdentifier());
+							break;
+						}
+					}
+				}
+			}
+		}else if(obj instanceof AuctionStateEnum){
+			if(AlertType.ALERT_CANCELED_AUCTION.equals(this.getAlertType())   && !AlertType.ALERT_AUTOMATIC.equals(this.getAlertType())){
+				
+				AuctionStateEnum state=(AuctionStateEnum)obj;
+				if(state.equals(AuctionStateEnum.CANCELED)){
+					
+					alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.AUCTION_CANCELED_MESSAGE + auctionBean.getProduct().getIdentifier());
+				
+				}else if(state.equals(AuctionStateEnum.COMPLETED)){
+					
+				}
+			}
+		}
+		return alert;
+	}
 
+
+	
 	/**
 	 * @return the listAlert
 	 */

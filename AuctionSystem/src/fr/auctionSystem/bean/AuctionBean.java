@@ -4,22 +4,24 @@
 package fr.auctionSystem.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Clock;
-import fr.auctionSystem.util.Messages;
 
 /**
  * @author Sakr
  *
  */
-public class AuctionBean extends Observable{
+public class AuctionBean extends Observable implements Observer{
 
 	private ObjectBean product;
 	private AuctionStateEnum state;
-	private Clock deadLine;
+	private Date deadLine;
+	private Clock creationClock;
 	private Long minimumPrice;
 	private Long reservePrice;
 	//L'enchere a plusieurs offres
@@ -37,20 +39,26 @@ public class AuctionBean extends Observable{
 	 * @param product
 	 * @param state
 	 * @param deadLine
+	 * @param creationClock
 	 * @param minimumPrice
 	 * @param reservePrice
 	 * @param listOfferBean
-	 * @param listener
+	 * @param auctionId
 	 */
+	
 	public AuctionBean(ObjectBean product, AuctionStateEnum state,
-			Clock deadLine, Long minimumPrice, Long reservePrice) {
+			Date deadLine,Clock creationClock, Long minimumPrice, Long reservePrice) {
 		this.product = product;
 		this.state = state;
 		this.deadLine = deadLine;
+		this.creationClock=creationClock;
 		this.minimumPrice = minimumPrice;
 		this.reservePrice = reservePrice;
+		this.creationClock.addObserver(this);
 		AuctionBean.technicalAuctionId ++;
 	}
+	
+	
 	public AuctionBean() {
 		
 	}
@@ -91,18 +99,36 @@ public class AuctionBean extends Observable{
 	 */
 	public void setState(AuctionStateEnum state) {
 		this.state = state;
+		setChanged();
+		notifyObservers(this.state);
 	}
 	/**
 	 * @return the deadLine
 	 */
-	public Clock getDeadLine() {
+	public Date getDeadLine() {
 		return deadLine;
 	}
 	/**
 	 * @param deadLine the deadLine to set
 	 */
-	public void setDeadLine(Clock deadLine) {
+	public void setDeadLine(Date deadLine) {
 		this.deadLine = deadLine;
+		setChanged();
+		notifyObservers(this.deadLine);
+	}
+	
+	
+	/**
+	 * @return the creationClock
+	 */
+	public Clock getCreationClock() {
+		return creationClock;
+	}
+	/**
+	 * @param creationClock the creationClock to set
+	 */
+	public void setCreationClock(Clock creationClock) {
+		this.creationClock = creationClock;
 	}
 	/**
 	 * @return the minimumPrice
@@ -120,9 +146,6 @@ public class AuctionBean extends Observable{
 	 * @return the reservePrice
 	 */
 	public Long getReservePrice() {
-		if(reservePrice==-1L){
-			System.out.println(Messages.NOT_YOUR_AUCTION);
-		}
 		return reservePrice;
 	}
 	/**
@@ -148,15 +171,21 @@ public class AuctionBean extends Observable{
 		setChanged();
 		notifyObservers(offerBean);
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "AuctionBean [product=" + product + ", state=" + state
 				+ ", deadLine=" + deadLine + ", minimumPrice=" + minimumPrice
 				+ ", reservePrice=" + reservePrice + ", listOfferBean="
 				+ listOfferBean + ", auctionId=" + auctionId + "]";
+	}
+	@Override
+	public void update(Observable obs, Object obj) {
+		if(obs instanceof Clock){
+			if(this.deadLine.compareTo((Date)obj)<=0){
+				this.state=AuctionStateEnum.COMPLETED;
+			}
+		}
+		
 	}
 
 	
