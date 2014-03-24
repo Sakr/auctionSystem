@@ -292,4 +292,26 @@ public class User extends UserBean implements SellerRole,BuyerRole{
 		return super.toString();
 	}
 
+	@Override
+	public Long getReservePriceForAuction(AuctionBean auction, Long reservePrice) {
+		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
+			//On verifie si l'enchere appartient a l'utilisateur
+			if(this.getListAuctionBean().get(auction.getAuctionId())!=null){
+				
+				if(AuctionStateEnum.PUBLISHED.equals(auction.getState())){
+					return auction.getReservePrice();
+				}else{
+					System.out.println(Messages.AUCTION_IS_PUBLISHED);
+					return null;
+				}
+			}else{
+				System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
+				return null;
+			}
+		}else{
+			System.out.println(Messages.NO_SLLER_ROLE);
+			return null;
+		}
+	}
+
 }

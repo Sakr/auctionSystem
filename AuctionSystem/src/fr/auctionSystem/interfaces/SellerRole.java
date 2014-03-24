@@ -26,4 +26,7 @@ public interface SellerRole {
 	/**preciser le prix de reserve **/
 	public boolean specifyReservePriceForAuction(AuctionBean auction, Long reservePrice);
 	
+	/**preciser le prix de reserve **/
+	public Long getReservePriceForAuction(AuctionBean auction, Long reservePrice);
+	
 }
