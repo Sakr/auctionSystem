@@ -3,6 +3,11 @@
  */
 package fr.auctionSystem.bean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import fr.auctionSystem.util.RoleEnum;
 
 /**
@@ -15,6 +20,9 @@ public class UserBean {
 	private String firstName;
 	private String secondName;
 	private RoleEnum role;
+	private List<AlertBean> listAlertBean;
+	private Map<Integer,AuctionBean> listAuctionBean;
+	
 	/**
 	 * @param login
 	 * @param firstName
@@ -27,6 +35,8 @@ public class UserBean {
 		this.firstName = firstName;
 		this.secondName = secondName;
 		this.role = role;
+		this.listAlertBean=new ArrayList<AlertBean>();
+		this.listAuctionBean=new HashMap<Integer,AuctionBean>();
 	}
 
 	/**
@@ -77,6 +87,23 @@ public class UserBean {
 	public void setRole(RoleEnum role) {
 		this.role = role;
 	}
+	
+	/**
+	 * @return the listAlertBean
+	 */
+	public List<AlertBean> getListAlertBean() {
+		return listAlertBean;
+	}
+
+
+	/**
+	 * @return the listAuctionBean
+	 */
+	public Map<Integer, AuctionBean> getListAuctionBean() {
+		return listAuctionBean;
+	}
+
+
 	@Override
 	public String toString() {
 		return login + " ";

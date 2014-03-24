@@ -99,8 +99,8 @@ public class AuctionBean extends Observable implements Observer{
 	 */
 	public void setState(AuctionStateEnum state) {
 		this.state = state;
-		setChanged();
-		notifyObservers(this.state);
+		this.setChanged();
+		this.notifyObservers(this.state);
 	}
 	/**
 	 * @return the deadLine
@@ -113,8 +113,8 @@ public class AuctionBean extends Observable implements Observer{
 	 */
 	public void setDeadLine(Date deadLine) {
 		this.deadLine = deadLine;
-		setChanged();
-		notifyObservers(this.deadLine);
+		this.setChanged();
+		this.notifyObservers(this.deadLine);
 	}
 	
 	
@@ -153,8 +153,8 @@ public class AuctionBean extends Observable implements Observer{
 	 */
 	public void setReservePrice(Long reservePrice) {
 		this.reservePrice = reservePrice;
-		setChanged();
-		notifyObservers(this.reservePrice);
+		this.setChanged();
+		this.notifyObservers(this.reservePrice);
 	}
 	/**
 	 * @return the listOfferBean
@@ -168,8 +168,8 @@ public class AuctionBean extends Observable implements Observer{
 	public void addOfferBean(OfferBean offerBean) {
 		//Alerte automatique des qu'une offre est ajoute
 		this.listOfferBean.add(offerBean);
-		setChanged();
-		notifyObservers(offerBean);
+		this.setChanged();
+		this.notifyObservers(offerBean);
 	}
 	@Override
 	public String toString() {
@@ -187,7 +187,13 @@ public class AuctionBean extends Observable implements Observer{
 		}
 		
 	}
-
+	
+	/**
+	 * Cette methode permet d'enlever l'observer ajouté sur l'instance de cette objet
+	 */
+	public void deleteObserver(){
+		this.deleteObservers();
+	}
 	
 }
 

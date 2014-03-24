@@ -5,10 +5,9 @@ package fr.auctionSystem.bean;
 
 import fr.auctionSystem.classes.User;
 import fr.auctionSystem.util.AlertType;
-import fr.auctionSystem.util.Clock;
 
 /**
- * @author Ines
+ * @author slimem
  *
  */
 public class AlertContextBean {
@@ -16,8 +15,6 @@ public class AlertContextBean {
 	private Object alertObject;
 	private User alertUser;
 	private AlertType alertType;
-	
-
 
 	/**
 	 * @param alertObject

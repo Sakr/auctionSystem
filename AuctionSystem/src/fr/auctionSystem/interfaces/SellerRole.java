@@ -14,7 +14,7 @@ import fr.auctionSystem.util.Clock;
  * @author Sakr
  *
  */
-public interface SellerRole extends BuyerRole {
+public interface SellerRole {
 	/**creer une enchere **/
 	public AuctionBean createAuction(AuctionStateEnum state, Date deadLine,Clock creationClock, Long minimumPrice, Long reservePrice);
 	/**publier cette enchere  **/

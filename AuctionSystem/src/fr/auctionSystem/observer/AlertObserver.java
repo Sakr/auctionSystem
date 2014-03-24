@@ -3,8 +3,6 @@
  */
 package fr.auctionSystem.observer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -20,7 +18,6 @@ import fr.auctionSystem.util.Messages;
 
 /**
  * @author slimem
- *
  */
 public class AlertObserver extends AlertContextBean implements Observer {
 	
@@ -28,11 +25,6 @@ public class AlertObserver extends AlertContextBean implements Observer {
 			AlertType alertType) {
 		super(alertObject, alertUser, alertType);
 	}
-
-	/**
-	 * Cette classe observe et enregistre un historique des alertes dans une liste
-	 */
-	private List<AlertBean> listAlert=new ArrayList<AlertBean>(); 
 
 	@Override
 	public void update(Observable obs, Object obj) {
@@ -93,20 +85,20 @@ public class AlertObserver extends AlertContextBean implements Observer {
 					alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.AUCTION_CANCELED_MESSAGE + auctionBean.getProduct().getIdentifier());
 				
 				}else if(state.equals(AuctionStateEnum.COMPLETED)){
-					
+					//On cherche si l'offre a ete emportee par un utilisateur
+					for(OfferBean offer:auctionBean.getListOfferBean()){
+						if(offer.getPrice()>auctionBean.getReservePrice()){
+							System.out.println("L'enchere "+auctionBean.toString()+" est terminee, elle a ete emportee par"+offer.getUserBean().toString());
+							break;
+						}
+					}
 				}
 			}
 		}
+		//On ajoute l'alert sur la liste des alertes de l'utilisateur
+		this.getAlertUser().getListAlertBean().add(alert);
 		return alert;
 	}
 
-
-	
-	/**
-	 * @return the listAlert
-	 */
-	public List<AlertBean> getListAlert() {
-		return listAlert;
-	}
 
 } 

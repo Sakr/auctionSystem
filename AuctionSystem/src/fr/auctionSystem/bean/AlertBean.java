@@ -16,7 +16,6 @@ public class AlertBean {
 	 * @param message
 	 */
 	public AlertBean(String message) {
-		super();
 		this.message = message;
 	}
 

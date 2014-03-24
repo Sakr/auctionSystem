@@ -4,17 +4,12 @@
 package fr.auctionSystem.classes;
 
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import fr.auctionSystem.bean.AlertBean;
 import fr.auctionSystem.bean.AuctionBean;
 import fr.auctionSystem.bean.ObjectBean;
 import fr.auctionSystem.bean.OfferBean;
 import fr.auctionSystem.bean.UserBean;
+import fr.auctionSystem.interfaces.BuyerRole;
 import fr.auctionSystem.interfaces.SellerRole;
 import fr.auctionSystem.observer.AlertObserver;
 import fr.auctionSystem.util.AlertType;
@@ -26,10 +21,9 @@ import fr.auctionSystem.util.RoleEnum;
  * @author slimem
  *
  */
-public class User extends UserBean implements SellerRole{
+public class User extends UserBean implements SellerRole,BuyerRole{
 
-	private Map<Integer,AuctionBean> listAuctionBean=new HashMap<Integer,AuctionBean>();
-	private List<AlertBean> listAlertBean=new ArrayList<AlertBean>(); 
+	
 	
 	public User(String login, String firstName, String secondName, RoleEnum role) {
 		super(login, firstName, secondName, role);
@@ -39,28 +33,28 @@ public class User extends UserBean implements SellerRole{
 	public boolean issueOffer(AuctionBean auction, Long price) {
 		
 		//Si l'encher n'appartient pas a l'utilisateur
-		if(listAuctionBean.get(auction.getAuctionId())==null){
-			
+		if(this.getListAuctionBean().get(auction.getAuctionId())==null){
 			//Si l'enchere est publiee
 			if(auction.getState().equals(AuctionStateEnum.PUBLISHED)){
-				
 				//On creer l'offre
 				OfferBean offerBean=null;
 				//Il n'est pas possible d'emmettre une offre qu'au dessous du prix minimum
 				if(price>auction.getMinimumPrice()){
 					offerBean=new OfferBean(price,this);
 					auction.addOfferBean(offerBean);
+					
+					//Lorsque une offre est emise sur l'enchere, on met a jour le prix minimum de l'enchere
+					auction.setMinimumPrice(offerBean.getPrice());
 					return true;
 				}else{
 					System.out.println(Messages.NO_RIGHT_ISSUE_OFFER_BELOW_MINIMUM_PRICE);
 					return false;
 				}
-				
 			}else{
 				System.out.println(Messages.NO_RIGHT_ISSUE_OFFER_NOT_PUBLISHED);
 				return false;
 			}
-		}else{//sinon il n'a pas le droit d'emmetre des offres dessus
+		}else{//sinon il n'a pas le droit d'emmetre des offres sur son offre
 			System.out.println(Messages.NO_RIGHT_ISSUE_OFFER);
 			return false;
 		}
@@ -80,7 +74,7 @@ public class User extends UserBean implements SellerRole{
 			//On lui ajoute un id
 			auction.setAuctionId();
 			//On ajoute l'enchere sur la liste des encheres avec son id en cle de l'Hashmap
-			listAuctionBean.put(auction.getAuctionId(),auction);
+			this.getListAuctionBean().put(auction.getAuctionId(),auction);
 			System.out.println(Messages.AUCTION_CREATED);
 		}else{
 			System.out.println(Messages.NO_RIGHT_CREATE_AUCTION);
@@ -96,7 +90,7 @@ public class User extends UserBean implements SellerRole{
 		
 		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
 			//On verifie si l'enchere appartient a l'utilisateur
-			if(listAuctionBean.get(auction.getAuctionId())!=null){
+			if(this.getListAuctionBean().get(auction.getAuctionId())!=null){
 				if(!auction.getState().equals(AuctionStateEnum.PUBLISHED)){
 					auction.setState(AuctionStateEnum.PUBLISHED);
 					System.out.println(Messages.AUCTION_PUBLISHED);
@@ -120,7 +114,7 @@ public class User extends UserBean implements SellerRole{
 	private boolean doesAnOfferReachedReservePrice(AuctionBean auction){
 		boolean response=false;
 		for(OfferBean offer:auction.getListOfferBean()){
-			if(listAuctionBean.get(auction.getAuctionId()).getReservePrice()<=offer.getPrice()){
+			if(this.getListAuctionBean().get(auction.getAuctionId()).getReservePrice()<=offer.getPrice()){
 				response=true;
 			}
 		}
@@ -134,9 +128,9 @@ public class User extends UserBean implements SellerRole{
 		
 		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
 			//On verifie si l'enchere appartient a l'utilisateur
-			if(listAuctionBean.get(auction.getAuctionId())!=null){
+			if(this.getListAuctionBean().get(auction.getAuctionId())!=null){
 				
-				//On verifie si elle n'est pas deja annulée
+				//On verifie si elle n'est pas deja annulee
 				if(!auction.getState().equals(AuctionStateEnum.CANCELED)){
 					//Et on verifie si aucune offre sur cette enchere n'a atteint le prix de reserve de l'enchere.
 					if(!doesAnOfferReachedReservePrice(auction)){
@@ -165,7 +159,7 @@ public class User extends UserBean implements SellerRole{
 		
 		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
 			//On verifie si l'enchere appartient a l'utilisateur
-			if(listAuctionBean.get(auction.getAuctionId())!=null){
+			if(this.getListAuctionBean().get(auction.getAuctionId())!=null){
 				if(AuctionStateEnum.PUBLISHED.equals(auction.getState())){
 					auction.setMinimumPrice(minimumPrice);
 					return true;
@@ -190,7 +184,7 @@ public class User extends UserBean implements SellerRole{
 		
 		if(this.getRole().equals(RoleEnum.SELLER_BUYER) || this.getRole().equals(RoleEnum.SELLER)){
 			//On verifie si l'enchere appartient a l'utilisateur
-			if(listAuctionBean.get(auction.getAuctionId())!=null){
+			if(this.getListAuctionBean().get(auction.getAuctionId())!=null){
 				
 				if(AuctionStateEnum.PUBLISHED.equals(auction.getState())){
 					auction.setReservePrice(reservePrice);
@@ -199,8 +193,6 @@ public class User extends UserBean implements SellerRole{
 					System.out.println(Messages.AUCTION_IS_PUBLISHED);
 					return false;
 				}
-				
-				
 			}else{
 				System.out.println(Messages.AUCTION_NOT_BELONG_TO_USER);
 				return false;
@@ -211,23 +203,6 @@ public class User extends UserBean implements SellerRole{
 		}
 	}
 	
-
-	/**
-	 * @return the listAuctionBean
-	 */
-	public Map<Integer, AuctionBean> getListAuctionBean() {
-		return listAuctionBean;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-
 	@Override
 	public boolean addPriceReserveAlert(boolean value,AuctionBean auctionBean) {
 		
@@ -235,10 +210,17 @@ public class User extends UserBean implements SellerRole{
 		if(this.getRole().equals(RoleEnum.BUYER)|| this.getRole().equals(RoleEnum.SELLER_BUYER)){
 			
 			//il faut que l'enchere ne sois pas a l'utilisateur
-			if(listAuctionBean.get(auctionBean.getAuctionId())==null){
-				AlertObserver userAlertObserver=new AlertObserver(new Object(),this,AlertType.ALERT_PRICE_RESERVE);
-				auctionBean.addObserver(userAlertObserver);
-				return true;
+			if(this.getListAuctionBean().get(auctionBean.getAuctionId())==null){
+				if(value){
+					AlertObserver userAlertObserver=new AlertObserver(new Object(),this,AlertType.ALERT_PRICE_RESERVE);
+					auctionBean.addObserver(userAlertObserver);
+					System.out.println(Messages.ALERT_ADD);
+					return true;
+				}else{
+					auctionBean.deleteObserver();
+					System.out.println(Messages.ALERT_REMOVE);
+					return true;
+				}
 			}else{
 				System.out.println(Messages.AUCTION_BELONG_TO_USER);
 				return false;
@@ -254,10 +236,17 @@ public class User extends UserBean implements SellerRole{
 		//Si l'utilisateur est acheteur, ou un acheteur vendeur
 		if(this.getRole().equals(RoleEnum.BUYER)|| this.getRole().equals(RoleEnum.SELLER_BUYER)){
 			//il faut que l'enchere ne sois pas a l'utilisateur
-			if(listAuctionBean.get(auctionBean.getAuctionId())==null){
-				AlertObserver userAlertObserver=new AlertObserver(new Object(),this,AlertType.ALERT_CANCELED_AUCTION);
-				auctionBean.addObserver(userAlertObserver);
-				return true;
+			if(this.getListAuctionBean().get(auctionBean.getAuctionId())==null){
+				if(value){
+					AlertObserver userAlertObserver=new AlertObserver(new Object(),this,AlertType.ALERT_CANCELED_AUCTION);
+					auctionBean.addObserver(userAlertObserver);
+					System.out.println(Messages.ALERT_ADD);
+					return true;
+				}else{
+					auctionBean.deleteObserver();
+					System.out.println(Messages.ALERT_REMOVE);
+					return true;
+				}
 			}else{
 				System.out.println(Messages.AUCTION_BELONG_TO_USER);
 				return false;
@@ -272,32 +261,35 @@ public class User extends UserBean implements SellerRole{
 	public boolean addAnotherGreaterOfferAlert(boolean value,AuctionBean auctionBean) {
 		if(this.getRole().equals(RoleEnum.BUYER)|| this.getRole().equals(RoleEnum.SELLER_BUYER)){
 			//il faut que l'enchere ne sois pas a l'utilisateur
-			if(listAuctionBean.get(auctionBean.getAuctionId())==null){
-				AlertObserver userAlertObserver=new AlertObserver(new Object(),this,AlertType.ALERT_GREATER_OFFER);
-				auctionBean.addObserver(userAlertObserver);
-				return true;
+			if(this.getListAuctionBean().get(auctionBean.getAuctionId())==null){
+				if(value){
+					AlertObserver userAlertObserver=new AlertObserver(new Object(),this,AlertType.ALERT_GREATER_OFFER);
+					auctionBean.addObserver(userAlertObserver);
+					System.out.println(Messages.ALERT_ADD);
+					return true;
+				}else{
+					auctionBean.deleteObserver();
+					System.out.println(Messages.ALERT_REMOVE);
+					return true;
+				}
 			}else{
 				System.out.println(Messages.AUCTION_BELONG_TO_USER);
 				return false;
 			}	
 		}else{
+			System.out.println(Messages.NO_RIGHT_ADD_ALERT_AUCTION);
 			return false;
 		}
 	}
 
 	@Override
-	public List<AlertBean> getListLaunchedAlert() {
-//		for(AlertBean alertBean: alertObserver.getListAlert()){
-//			listAlertBean.add(alertBean);
-//		}
-		return listAlertBean;
-	}
-
-	@Override
-	public Long getMinimumPriceForAuction(AuctionBean auction) {
+	public Long getMinimumPriceOfAuction(AuctionBean auction) {
 		return auction.getMinimumPrice();
 	}
-
 	
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 
 }
