@@ -3,19 +3,19 @@
  */
 package fr.auctionSystem.bean;
 
-
 /**
- * @author Sakr
+ * @author david
  *
  */
 public class AlertBean {
-	private String message;
 	
+	private String message;
 	
 	/**
 	 * @param message
 	 */
 	public AlertBean(String message) {
+		super();
 		this.message = message;
 	}
 
@@ -32,6 +32,5 @@ public class AlertBean {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+
 }

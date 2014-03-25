@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package fr.auctionSystem.classes;
 
 import java.util.HashMap;
@@ -11,14 +14,12 @@ import fr.auctionSystem.util.Messages;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author slimem
+ * @author david
  *
  */
 public class AuctionSystem {
-	
+
 	private Map<String,User> userMap=new  HashMap<String,User>();
-	private Map<Integer,AuctionBean>  listVisilbleAuctionBean=new HashMap<Integer,AuctionBean>();
-	private Map<Integer,AuctionBean>  listCancelAuctionBean=new HashMap<Integer,AuctionBean>();
 		
 	public AuctionSystem() {
 		
@@ -38,70 +39,56 @@ public class AuctionSystem {
 	}
 	
 	/**
-	 * Cette methode prend en parametre un utilisateur, et retourne la liste de tous les offres visible pour un utilisateur donné
-	 * 
-	 * La liste de retour sera composé de deux parties
-	 * 
-	 * 1- Une partie visible par tous les utilisateur
-	 *    => Les encheres publiees sur le systeme
-	 *    
-	 * 2- Une partie prive, qui ne sera visible que par l'utilisateur qui est passee en parametre, qui sera composee, des
-	 * 
-	 *  * Encheres annulees mais consideree comme visible car elles appartiennent a l'utilisateur (Leur vendeur)
-	 *  * Encheres annulees mais consideree comme visible car l'utilisateur a emis au moins une offre dessus
-	 *   
+	 * Cette methode prend en parametre un utilisateur, et retourne la liste de toutes les offres visible pour un utilisateur donn�
 	 */
 	public Map<Integer, AuctionBean> getListOfVisilbleAuctionForUser(User user) {
+		Map<Integer,AuctionBean>  listVisilbleAuctionBean=new HashMap<Integer,AuctionBean>();
 		ObjectComparator userComparator=new ObjectComparator();
 		//On recupere la liste des utilisateurs 
 		User userFromMap=null;
 		Map<Integer,AuctionBean> mapAuctionByUser=null;
 		for (String mapKey : userMap.keySet()) {
 			
-			//On recupere la liste des encheres publiees par chacun des utilisateurs
+			//On recupere la liste des encheres publiees pour chacun des utilisateurs
 			userFromMap=userMap.get(mapKey);
 			mapAuctionByUser=userFromMap.getListAuctionBean();
-			
-			//Si l'utilisateur possede des encheres publiees
+
+			//Si l'utilisateur possede des encheres
 			if(!mapAuctionByUser.isEmpty()){
 				AuctionBean auction=null;
-				//On les ajoute sur la liste qui sera visible par tous les membres du systemes
+				//On parcoure la liste des encheres par user
 				for (Integer auctionByUserKey : mapAuctionByUser.keySet()) {
 					auction= mapAuctionByUser.get(auctionByUserKey);
 					
-					//Si l'encher est visible
+					//Si l'enchere est publiee elle est visible pour tous
 					if(auction.getState().equals(AuctionStateEnum.PUBLISHED)){
-						//Si l'utilisateur passe en parametre n'est pas celui qui possede la liste des enchers qu'on est entrain de parcourir
-						//Il a pas le droit de voir le prix de reserve de l'enchere
-						listVisilbleAuctionBean.put(auction.getAuctionId(), auction) ;
+						listVisilbleAuctionBean.put(auction.getAuctionId(), auction);
+					//Si l'enchere est creee elle est visible uniquement pour le vendeur
+					}else if(auction.getState().equals(AuctionStateEnum.CREATED) && userComparator.compare(userFromMap, user) == 0){
+						listVisilbleAuctionBean.put(auction.getAuctionId(), auction);
+					//Si l'enchere est annulee elle est visible uniquement pour le vendeur et tous ceux qui ont poses une offre sur l'enchere
 					}else if(auction.getState().equals(AuctionStateEnum.CANCELED)){
-						listCancelAuctionBean.put(auction.getAuctionId(), auction) ;
+						//Si au moins un acheteur a mis une offre sur l'enchere
+						if (!auction.getListOfferBean().isEmpty()) {
+							//Pour chaque offre on verifie si le user en parametre est celui qui doit voir l'enchere
+							for(OfferBean offer : auction.getListOfferBean()){
+								if(userComparator.compare(userFromMap, user) == 0 || userComparator.compare(offer.getUserBean(), user) == 0){
+									listVisilbleAuctionBean.put(auction.getAuctionId(), auction);
+								}
+							}
+						}
+						//Si il n'y a que le vendeur
+						else {
+							if(userComparator.compare(userFromMap, user) == 0) {
+								listVisilbleAuctionBean.put(auction.getAuctionId(), auction);
+							}
+						}
+
 					}
 				}
 			}
 		}
-		AuctionBean canceledAuction=null;
-		//On les ajoutes sur la liste qui sera visible par tous les membres du systemes
-		for (Integer canceledAuctionByUserKey : listCancelAuctionBean.keySet()) {
-			canceledAuction= mapAuctionByUser.get(canceledAuctionByUserKey);
-			
-			//Si l'enchere annulee n'appartient pas a l'utilisateur parcourru, on l'enleve 
-			if(user.getListAuctionBean().get(canceledAuction.getAuctionId())==null){
-				listCancelAuctionBean.remove(canceledAuction.getAuctionId());
-			}
-			//Si l'enchere annulee n'appartient pas a l'utilisateur parcourru sur la liste de ceux 
-			//qui ont emis une offre sur l'enchere, on l'enleve 
-			
-			for(OfferBean offer:canceledAuction.getListOfferBean()){
-				if(userComparator.compare( offer.getUserBean(), user)!=0){
-					listCancelAuctionBean.remove(canceledAuction.getAuctionId());
-				}
-			}
-		}
 		
-		if(listVisilbleAuctionBean.isEmpty()){
-			System.out.println(Messages.NO_VISIBLE_AUCTION);
-		}
 		return listVisilbleAuctionBean;
 	}
 
@@ -133,4 +120,5 @@ public class AuctionSystem {
 		}
 		return Exist;
 	}
+
 }

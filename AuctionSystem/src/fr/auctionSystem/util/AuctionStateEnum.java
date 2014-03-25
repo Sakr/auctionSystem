@@ -4,9 +4,11 @@
 package fr.auctionSystem.util;
 
 /**
- * @author Sakr
+ * @author david
  *
  */
 public enum AuctionStateEnum {
+
 	CREATED,PUBLISHED,CANCELED,COMPLETED
+
 }

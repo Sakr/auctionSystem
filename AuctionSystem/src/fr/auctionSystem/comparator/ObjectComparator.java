@@ -9,14 +9,19 @@ import fr.auctionSystem.classes.User;
 import fr.auctionSystem.util.Clock;
 
 /**
- * @author slimem
+ * @author david
  *
  */
-public  class ObjectComparator implements Comparator<Object>{
+public class ObjectComparator implements Comparator<Object> {
+
+	/**
+	 * 
+	 */
+	public ObjectComparator() {
+	}
 
 	@Override
 	public int compare(Object o1, Object o2) {
-		
 		boolean comparatorReturn=false;
 		
 		if(o1 instanceof User){
@@ -32,5 +37,5 @@ public  class ObjectComparator implements Comparator<Object>{
 		}
 		return ((comparatorReturn) ? 0 : 1);
 	}
-	
+
 }

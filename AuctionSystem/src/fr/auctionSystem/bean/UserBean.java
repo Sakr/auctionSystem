@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author Sakr
+ * @author david
  *
  */
 public class UserBean {
-	
+
 	private String login;
 	private String firstName;
 	private String secondName;
@@ -103,9 +102,9 @@ public class UserBean {
 		return listAuctionBean;
 	}
 
-
 	@Override
 	public String toString() {
 		return login + " ";
 	}
+
 }

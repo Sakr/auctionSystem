@@ -7,17 +7,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
-
 /**
- * @author slimem
- * 
+ * @author david
+ *
  */
-public class Clock extends Observable{
+public class Clock extends Observable {
 
-	
 	private Date currentDate;
-	
-	
 	
 	/**
 	 * @param currentDate
@@ -49,7 +45,5 @@ public class Clock extends Observable{
 		setChanged();
 		notifyObservers(this.currentDate);
 	}
-	
-	
 
 }

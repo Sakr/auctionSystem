@@ -4,14 +4,12 @@
 package fr.auctionSystem.bean;
 
 /**
- * @author Sakr
+ * @author david
  *
  */
 public class ObjectBean {
-	
 	private String identifier;
 	private String description;
-	
 	
 	/**
 	 * @param identifier
@@ -22,9 +20,6 @@ public class ObjectBean {
 		this.description = description;
 	}
 	
-	public ObjectBean() {
-		
-	}
 	/**
 	 * @return the identifier
 	 */
@@ -49,5 +44,4 @@ public class ObjectBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
 }

@@ -4,9 +4,9 @@
 package fr.auctionSystem.util;
 
 /**
- * @author Sakr
+ * @author david
  *
  */
 public enum RoleEnum {
-	SELLER,BUYER,SELLER_BUYER
+	SELLER,BUYER,SELLER_BUYER;
 }

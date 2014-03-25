@@ -6,12 +6,12 @@ package fr.auctionSystem.bean;
 import fr.auctionSystem.classes.User;
 import fr.auctionSystem.util.AlertType;
 
+
 /**
- * @author slimem
+ * @author david
  *
  */
 public class AlertContextBean {
-	
 	private Object alertObject;
 	private User alertUser;
 	private AlertType alertType;

@@ -17,7 +17,8 @@ import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Messages;
 
 /**
- * @author slimem
+ * @author david
+ *
  */
 public class AlertObserver extends AlertContextBean implements Observer {
 	
@@ -45,7 +46,6 @@ public class AlertObserver extends AlertContextBean implements Observer {
 	 * @return AlertBean 
 	 */
 	private AlertBean getAlertBean(Object obj, AuctionBean auctionBean) {
-		
 		AlertBean alert=null;
 		if(obj instanceof OfferBean){
 			
@@ -57,38 +57,48 @@ public class AlertObserver extends AlertContextBean implements Observer {
 				
 				for(OfferBean offerBean:auctionBean.getListOfferBean()){
 					if(offerBean.getPrice()>=auctionBean.getReservePrice()){
-						System.out.println();
-						alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.RESERVE_PRICE_REACHED_BY_OFFER);
+						alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.RESERVE_PRICE_REACHED_BY_OFFER + auctionBean.getProduct().getIdentifier());
 						break;
 					}
 				}
 				
 			}else if(AlertType.ALERT_GREATER_OFFER.equals(this.getAlertType())){
 				OfferBean currentOfferFromAuction=(OfferBean)obj;
+				//On parcours la liste des offres sur cette enchere pour connaitre la meilleure offre du user a notifie
 				for(OfferBean offerBean:auctionBean.getListOfferBean()){
-					//L'offre que l'utilisateur a sur cette enchere 
 					ObjectComparator objectComparator=new ObjectComparator();
+					//On alerte le user uniquement si l'offre courante ne lui appartient pas et si l'offre courante est superieur a l'une des offres su user a alerter
 					if(objectComparator.compare(offerBean.getUserBean(), this.getAlertUser())==0){
-						if(currentOfferFromAuction.getPrice()>=offerBean.getPrice()){
-							alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.AUCTION_PRICE_CHANGED_MESSAGE + auctionBean.getProduct().getIdentifier());
+						if(objectComparator.compare(currentOfferFromAuction.getUserBean(), this.getAlertUser())!=0 && currentOfferFromAuction.getPrice()>offerBean.getPrice()){
+							alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.AUCTION_PRICE_CHANGED_MESSAGE + auctionBean.getProduct().getIdentifier() + " d'un montant de " + currentOfferFromAuction.getPrice() + " euros");
 							break;
 						}
 					}
 				}
 			}
 		}else if(obj instanceof AuctionStateEnum){
-			if(AlertType.ALERT_CANCELED_AUCTION.equals(this.getAlertType())   && !AlertType.ALERT_AUTOMATIC.equals(this.getAlertType())){
-				
-				AuctionStateEnum state=(AuctionStateEnum)obj;
+			AuctionStateEnum state=(AuctionStateEnum)obj;
+			
+			if(AlertType.ALERT_CANCELED_AUCTION.equals(this.getAlertType()) && !AlertType.ALERT_AUTOMATIC.equals(this.getAlertType())){
+
 				if(state.equals(AuctionStateEnum.CANCELED)){
 					
 					alert=new AlertBean(Messages.ALERT_TO + this.getAlertUser() + Messages.AUCTION_CANCELED_MESSAGE + auctionBean.getProduct().getIdentifier());
 				
-				}else if(state.equals(AuctionStateEnum.COMPLETED)){
+				}
+			} else {
+				
+				if(state.equals(AuctionStateEnum.COMPLETED)){
 					//On cherche si l'offre a ete emportee par un utilisateur
-					for(OfferBean offer:auctionBean.getListOfferBean()){
-						if(offer.getPrice()>auctionBean.getReservePrice()){
-							System.out.println("L'enchere "+auctionBean.toString()+" est terminee, elle a ete emportee par"+offer.getUserBean().toString());
+					for(OfferBean offer : auctionBean.getListOfferBean()){
+						if(offer.getPrice()>=auctionBean.getMinimumPrice()){
+							if (offer.getPrice()<auctionBean.getReservePrice()) {
+								System.out.println("L'enchere sur le produit "+auctionBean.getProduct().getIdentifier()+" est terminee et personne ne l'a remporte (le prix de reserve n'a pas ete attteint)");
+							}
+							else {
+								System.out.println("L'enchere sur le produit "+auctionBean.getProduct().getIdentifier()+" est terminee et elle a ete emportee par "+offer.getUserBean().toString()+" pour la somme de "+ offer.getPrice() +" euros");
+							}
+							
 							break;
 						}
 					}
@@ -96,9 +106,10 @@ public class AlertObserver extends AlertContextBean implements Observer {
 			}
 		}
 		//On ajoute l'alert sur la liste des alertes de l'utilisateur
-		this.getAlertUser().getListAlertBean().add(alert);
+		if (alert != null) {
+			this.getAlertUser().getListAlertBean().add(alert);
+		}
+		
 		return alert;
 	}
-
-
-} 
+}

@@ -4,10 +4,11 @@
 package fr.auctionSystem.util;
 
 /**
- * @author Sakr
+ * @author david
  *
  */
 public final class Messages {
+
 	/**Messages for auction**/
 	public static final String USER_ALREADY_EXIST="L'utilisateur existe deja";
 	public static final String USER_NOT_EXIST="L'utilisateur n'existe pas";
@@ -18,15 +19,16 @@ public final class Messages {
 	public static final String NOT_YOUR_AUCTION = "Cette enchere ne vous appartient pas, vous n'avez pas le droit de consulter son prix de reserve";
 	public static final String NO_RIGHT_CREATE_AUCTION = "Vous n'avez pas le droit de creer des encheres";
 	public static final String NO_RIGHT_POST_AUCTION = "Vous n'avez pas le droit de publier cette enchere";
-	public static final String NO_RIGHT_CANCEL_AUCTION = "Vous n'avez pas le droit d'annuler cette encheres";
+	public static final String NO_RIGHT_CANCEL_AUCTION = "Vous n'avez pas le droit d'annuler cette enchere";
 	public static final String NO_RIGHT_ISSUE_OFFER ="Vous n'avez pas le droit d'emmettre des offres sur une enchere qui vous appartient";
 	public static final String NO_RIGHT_ISSUE_OFFER_NOT_PUBLISHED="Vous n'avez pas le droit d'emmettre des offres sur cette enchere, elle n'est pas encore publiee";
-	public static final String NO_RIGHT_ISSUE_OFFER_BELOW_MINIMUM_PRICE="Il n'est pas possible d'emmettre une offre au dessous du prix minimum";
+	public static final String NO_RIGHT_ISSUE_OFFER_BELOW_MINIMUM_PRICE="Il n'est pas possible d'emmettre une offre egale ou en dessous du prix minimum";
 	public static final String NO_RIGHT_ADD_ALERT_AUCTION = "Vous n'avez pas le droit d'ajouter des alertes en etant que vendeur";
+	public static final String NO_RIGHT_CANCEL_AUCTION_RESERVE_PRICE = "Vous n'avez pas le droit d'annuler cette enchere car le prix de reserve est atteint par une offre";
 	
-	public static final String AUCTION_CANCELED_MESSAGE="[ALERT] Le vendeur a annul l'enchere du produit ";
+	public static final String AUCTION_CANCELED_MESSAGE="[ALERT] Le vendeur a annule l'enchere du produit ";
 	public static final String AUCTION_PRICE_CHANGED_MESSAGE="[ALERT] Une offre superieure a la votre a ete emise sur l'enchere du produit ";
-	public static final String RESERVE_PRICE_REACHED_BY_OFFER = "[ALERT] Vous ne pouvez pas annuler cette enchere, une offre dessus a atteint le prix de reserve";
+	public static final String RESERVE_PRICE_REACHED_BY_OFFER = "[ALERT] Le prix de reserve a ete atteint sur l'enchere du produit ";
 	public static final String OFFER_DONE_ON_AUCTION="[ALERT] Une offre a ete emise sur l'enchere du produit ";
 	public static final String OFFER_DONE_ON_AUCTION_PRODUCT=" d'un montant de ";
 	public static final String AUCTION_OFFER_DONE_MESSAGE="Une offre est faite sur votre enchere";
@@ -40,7 +42,10 @@ public final class Messages {
 	public static final String AUCTION_CREATED = "L'enchere a bien ete creee";
 	public static final String AUCTION_PUBLISHED =  "L'enchere a bien ete publiee";
 	public static final String AUCTION_IS_PUBLISHED = "L'enchere est publie, il n'est plus possible de la modifier";
-	public static final String ALERT_ADD = "L'alerte a ete bien ajoutee";
-	public static final String ALERT_REMOVE = "L'alerte a ete bien supprimee";
-	public static final String USER_CREATED = "L'utilisateur a ete bien cree";
+	public static final String ALERT_ADD = "L'alerte a bien ete ajoutee";
+	public static final String ALERT_REMOVE = "L'alerte a bien ete desactive";
+	public static final String ALL_ALERT_REMOVE = "Toutes les alertes ont ete ete desactive sur l'enchere du produit ";
+	public static final String ALL_ALERT_NOT_REMOVE = "Il n'y a pas d'alerte sur cette enchere pour l'utilisateur ";
+	public static final String USER_CREATED = "L'utilisateur a bien ete cree";
+
 }

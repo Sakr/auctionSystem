@@ -9,14 +9,15 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import fr.auctionSystem.observer.AlertObserver;
 import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Clock;
 
 /**
- * @author Sakr
+ * @author david
  *
  */
-public class AuctionBean extends Observable implements Observer{
+public class AuctionBean extends Observable implements Observer {
 
 	private ObjectBean product;
 	private AuctionStateEnum state;
@@ -27,11 +28,14 @@ public class AuctionBean extends Observable implements Observer{
 	//L'enchere a plusieurs offres
 	private List<OfferBean> listOfferBean=new ArrayList<OfferBean>();
 	
-	//Cette Id est id technique (un attribut de classe) qui est incrémenté a chaque fois qu'on instancie un Auctionbean
+	//L'enchere peut avoir plusieurs alertes (observer)
+	private List<AlertObserver> listObserverAlert=new ArrayList<AlertObserver>();
+	
+	//Cette Id est id technique (un attribut de classe) qui est incremente a chaque fois qu'on instancie un Auctionbean
 	//Cette Id est setter dans l'id du bean lorsqu'on appel setAuctionId()
 	private static int technicalAuctionId=0;
 	
-	//cette id est l'id qui servira a identifier l'objet instancié (un attribut d'objet)
+	//cette id est l'id qui servira a identifier l'objet instancie (un attribut d'objet)
 	private int auctionId;
 	
 	
@@ -58,10 +62,10 @@ public class AuctionBean extends Observable implements Observer{
 		AuctionBean.technicalAuctionId ++;
 	}
 	
-	
 	public AuctionBean() {
 		
 	}
+	
 	/**
 	 * @return the auctionId
 	 */
@@ -76,12 +80,14 @@ public class AuctionBean extends Observable implements Observer{
 	public void setAuctionId() {
 		this.auctionId=AuctionBean.technicalAuctionId;
 	}
+	
 	/**
 	 * @return the product
 	 */
 	public ObjectBean getProduct() {
 		return product;
 	}
+	
 	/**
 	 * @param product the product to set
 	 */
@@ -94,6 +100,7 @@ public class AuctionBean extends Observable implements Observer{
 	public AuctionStateEnum getState() {
 		return state;
 	}
+	
 	/**
 	 * @param state the state to set
 	 */
@@ -102,12 +109,14 @@ public class AuctionBean extends Observable implements Observer{
 		this.setChanged();
 		this.notifyObservers(this.state);
 	}
+	
 	/**
 	 * @return the deadLine
 	 */
 	public Date getDeadLine() {
 		return deadLine;
 	}
+	
 	/**
 	 * @param deadLine the deadLine to set
 	 */
@@ -116,7 +125,6 @@ public class AuctionBean extends Observable implements Observer{
 		this.setChanged();
 		this.notifyObservers(this.deadLine);
 	}
-	
 	
 	/**
 	 * @return the creationClock
@@ -182,18 +190,30 @@ public class AuctionBean extends Observable implements Observer{
 	public void update(Observable obs, Object obj) {
 		if(obs instanceof Clock){
 			if(this.deadLine.compareTo((Date)obj)<=0){
-				this.state=AuctionStateEnum.COMPLETED;
+				setState(AuctionStateEnum.COMPLETED);
 			}
 		}
 		
 	}
 	
 	/**
-	 * Cette methode permet d'enlever l'observer ajouté sur l'instance de cette objet
+	 * @return the listObserverAlert
 	 */
-	public void deleteObserver(){
-		this.deleteObservers();
+	public List<AlertObserver> getListObserverAlert() {
+		return listObserverAlert;
 	}
-	
-}
 
+	public void addAlertObserver(AlertObserver userAlertObserver) {
+		this.addObserver(userAlertObserver);
+		listObserverAlert.add(userAlertObserver);
+		
+	}
+
+	public void deleteAlertObserver(AlertObserver userAlertObserver) {
+		this.deleteObserver(userAlertObserver);
+		listObserverAlert.remove(userAlertObserver);
+		
+	}
+
+
+}

@@ -3,13 +3,11 @@
  */
 package fr.auctionSystem.bean;
 
-
 /**
- * @author Sakr
+ * @author david
  *
  */
 public class OfferBean {
-	
 
 	private Long price;
 	private UserBean userBean;
@@ -50,7 +48,4 @@ public class OfferBean {
 	public void setUserBean(UserBean userBean) {
 		this.userBean = userBean;
 	}
-
-	
-	
 }
