@@ -21,11 +21,11 @@ public class TestAuctionSystem {
 	@Before
 	public void setUp() throws Exception {
 		auctionSystem = new AuctionSystem();
-		
-		
-		
 	}
 
+	/**
+	 * Teste la creation d'utilisateurs
+	 */
 	@Test
 	public void testCreateUser() {
 		assertTrue(auctionSystem.createUser("toto", "Glen", "Fiddich", RoleEnum.SELLER));

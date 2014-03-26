@@ -37,10 +37,11 @@ public class AuctionSystem {
 		if(!isInMap(user)){
 			userMap.put(login,user);
 			System.out.println(Messages.USER_CREATED);
+			return true;
 		}else{
 			System.out.println(Messages.USER_ALREADY_EXIST);
+			return false;
 		}
-		return !isInMap(user);
 	}
 	
 	/**

@@ -1,8 +1,0 @@
-@startuml 
-interface BuyerRole {
-	void issueOffer()
-}
-interface StandardRole {
-}
-StandardRole <|.. BuyerRole
-@enduml

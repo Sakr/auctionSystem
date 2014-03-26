@@ -43,6 +43,9 @@ public class TestSeller {
 		
 	}
 
+	/**
+	 * Teste la création d'une enchère
+	 */
 	@Test
 	public void testCreateAuction() {
 		System.out.println("=== testCreateAuction ===");
@@ -50,6 +53,9 @@ public class TestSeller {
 		assertNotNull(auction);
 	}
 	
+	/**
+	 * Teste la publication d'une enchère
+	 */
 	@Test
 	public void testPublishAuction() {
 		System.out.println("=== testPublishAuction ===");
@@ -58,6 +64,9 @@ public class TestSeller {
 		assertEquals(auction.getState(), AuctionStateEnum.PUBLISHED);
 	}
 	
+	/**
+	 * Teste la création d'une offre sur une enchère appartenant au vendeur
+	 */
 	@Test
 	public void testDoOfferOnMyOffer() {
 		System.out.println("=== testDoOfferOnMyOffer ===");
@@ -65,7 +74,10 @@ public class TestSeller {
 		seller.postAuction(auction);
 		assertFalse(seller.issueOffer(auction, new Long(60)));
 	}
-	
+
+	/**
+	 * Teste la visibilité d'un vendeur sur la liste des encheres publiées
+	 */
 	@Test
 	public void testVisiblePublishedAuction() {
 		System.out.println("=== testVisiblePublishedAuction ===");
@@ -74,6 +86,9 @@ public class TestSeller {
 		assertTrue(auctionSystem.getListOfVisilbleAuctionForUser(seller).containsValue(auction));
 	}
 	
+	/**
+	 * Teste la modification du prix minimum sur une enchère
+	 */
 	@Test
 	public void testSetMinimumPriceOnAuction() {
 		System.out.println("=== testSetMinimumPriceOnAuction ===");
@@ -85,6 +100,9 @@ public class TestSeller {
 		assertEquals(new Long(40), auction.getMinimumPrice());
 	}
 	
+	/**
+	 * Teste la visibilité du prix minimum sur une enchère pour un vendeur
+	 */
 	@Test
 	public void testVisibleMinimumPriceAuction() {
 		System.out.println("=== testVisibleMinimumPriceAuction ===");
@@ -93,6 +111,9 @@ public class TestSeller {
 		assertEquals(new Long(50), seller.getMinimumPriceOfAuction(auction));
 	}
 	
+	/**
+	 * Teste la modification du prix de réserve sur une enchère
+	 */
 	@Test
 	public void testSetReservePriceOnAuction() {
 		System.out.println("=== testSetReservePriceOnCreatedAuction ===");
@@ -104,6 +125,9 @@ public class TestSeller {
 		assertEquals(new Long(40), auction.getReservePrice());
 	}
 	
+	/**
+	 * Teste la visibilité du prix de réserve sur une enchère pour un vendeur
+	 */
 	@Test
 	public void testVisibleReservePriceAuction() {
 		System.out.println("=== testVisibleReservePriceAuction ===");
@@ -113,6 +137,9 @@ public class TestSeller {
 		assertEquals(null, buyer.getReservePriceForAuction(auction));
 	}
 	
+	/**
+	 * Teste l'annulation d'enchère
+	 */
 	@Test
 	public void testCancelAuction() {
 		System.out.println("=== testCancelAuction ===");
@@ -122,6 +149,9 @@ public class TestSeller {
 		assertEquals(AuctionStateEnum.CANCELED, auction.getState());
 	}
 	
+	/**
+	 * Teste l'annulation d'une enchère lorsque le prix de réserve est atteint par une offre
+	 */
 	@Test
 	public void testCancelOnReachedReservePriceAuction() {
 		System.out.println("=== testCancelOnReachedReservePriceAuction ===");
@@ -132,6 +162,9 @@ public class TestSeller {
 		assertEquals(AuctionStateEnum.PUBLISHED, auction.getState());
 	}
 	
+	/**
+	 * Teste la visibilité des enchères créées par un vendeur
+	 */
 	@Test
 	public void testVisibleCreatedAuction() {
 		System.out.println("=== testVisibleCreatedAuction ===");
@@ -139,6 +172,9 @@ public class TestSeller {
 		assertTrue(auctionSystem.getListOfVisilbleAuctionForUser(seller).containsValue(auction));
 	}
 	
+	/**
+	 * Teste la visibilité des enchères annulées pour un vendeur
+	 */
 	@Test
 	public void testVisibleCanceledAuction() {
 		System.out.println("=== testVisibleCanceledAuction ===");
@@ -147,6 +183,9 @@ public class TestSeller {
 		assertTrue(auctionSystem.getListOfVisilbleAuctionForUser(seller).containsValue(auction));
 	}
 	
+	/**
+	 * Teste l'alerte automatique pour un vendeur
+	 */
 	@Test
 	public void testAutomaticAlertOnOffer() {
 		System.out.println("=== testAutomaticAlertOnOffer ===");

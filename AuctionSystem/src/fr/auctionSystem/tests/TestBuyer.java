@@ -42,6 +42,9 @@ public class TestBuyer {
 		
 	}
 
+	/**
+	 * Teste la creation d'une offre par un acheteur
+	 */
 	@Test
 	public void testDoOffer() {
 		System.out.println("=== testDoOffer ===");
@@ -50,7 +53,10 @@ public class TestBuyer {
 		seller.postAuction(auction);
 		assertTrue(buyer.issueOffer(auction, new Long(60)));
 	}
-	
+
+	/**
+	 * Teste la visibilité d'un acheteur sur la liste des encheres publiées
+	 */
 	@Test
 	public void testVisiblePublishedAuction() {
 		System.out.println("=== testVisiblePublishedAuction ===");
@@ -59,6 +65,9 @@ public class TestBuyer {
 		assertTrue(auctionSystem.getListOfVisilbleAuctionForUser(buyer).containsValue(auction));
 	}
 	
+	/**
+	 * Teste la creation d'une offre avec un prix minimum incorrect
+	 */
 	@Test
 	public void testDoOfferWithBadMinimumPrice() {
 		System.out.println("=== testDoOfferWithBadMinimumPrice ===");
@@ -67,6 +76,9 @@ public class TestBuyer {
 		assertFalse(buyer.issueOffer(auction, new Long(40)));
 	}
 	
+	/**
+	 * Teste la visibilité du prix minimum sur une enchère pour un acheteur
+	 */
 	@Test
 	public void testVisibleMinimumPriceAuction() {
 		System.out.println("=== testVisibleMinimumPriceAuction ===");
@@ -75,6 +87,9 @@ public class TestBuyer {
 		assertEquals(new Long(50), buyer.getMinimumPriceOfAuction(auction));
 	}
 	
+	/**
+	 * Teste la visibilité des enchères créées pour un acheteur
+	 */
 	@Test
 	public void testVisibleCreatedAuction() {
 		System.out.println("=== testVisibleCreatedAuction ===");
@@ -82,6 +97,9 @@ public class TestBuyer {
 		assertFalse(auctionSystem.getListOfVisilbleAuctionForUser(buyer).containsValue(auction));
 	}
 	
+	/**
+	 * Teste la visibilité des enchères annulées pour un acheteur
+	 */
 	@Test
 	public void testVisibleCanceledAuction() {
 		System.out.println("=== testVisibleCanceledAuction ===");
@@ -93,6 +111,9 @@ public class TestBuyer {
 		assertFalse(auctionSystem.getListOfVisilbleAuctionForUser(buyer1).containsValue(auction));
 	}
 	
+	/**
+	 * Teste l'atteinte de la deadLine pour une enchère publiée
+	 */
 	@Test
 	public void testReachedDeadLineAuction() {
 		System.out.println("=== testReachedDeadLineAuction ===");
@@ -103,6 +124,9 @@ public class TestBuyer {
 		creationClock.setCurrentDate(Clock.addDays(creationClock.getCurrentDate(), 3));
 	}
 	
+	/**
+	 * Teste l'atteinte de la deadLine pour une enchère qui n'a pas atteint le prix de réserve
+	 */
 	@Test
 	public void testReachedDeadLineAuctionWithBadFinalPrice() {
 		System.out.println("=== testReachedDeadLineAuctionWithBadFinalPrice ===");
@@ -113,6 +137,9 @@ public class TestBuyer {
 		creationClock.setCurrentDate(Clock.addDays(creationClock.getCurrentDate(), 3));
 	}
 	
+	/**
+	 * Teste l'alerte du prix de réserve sur une enchère
+	 */
 	@Test
 	public void testReachedReservePriceAuctionAlert() {
 		System.out.println("=== testReachedReservePriceAuctionAlert ===");
@@ -125,6 +152,9 @@ public class TestBuyer {
 		assertFalse(buyer.getListAlertBean().isEmpty());
 	}
 	
+	/**
+	 * Teste l'alerte d'annulation d'une enchère par un vendeur
+	 */
 	@Test
 	public void testCancelAuctionAlert() {
 		System.out.println("=== testCancelAuctionAlert ===");
@@ -135,6 +165,9 @@ public class TestBuyer {
 		assertFalse(buyer.getListAlertBean().isEmpty());
 	}
 	
+	/**
+	 * Teste l'alerte lorsqu'une offre est suppérieure à l'acheteur courant
+	 */
 	@Test
 	public void testGreaterOfferOnAuctionAlert() {
 		System.out.println("=== testGreaterOfferOnAuctionAlert ===");
@@ -148,6 +181,9 @@ public class TestBuyer {
 		assertFalse(buyer.getListAlertBean().isEmpty());
 	}
 	
+	/**
+	 * Teste la désactivation de l'alerte du prix de réserve sur une enchère
+	 */
 	@Test
 	public void testDisableReachedReservePriceAuctionAlert() {
 		System.out.println("=== testDisableReachedReservePriceAuctionAlert ===");
@@ -157,7 +193,10 @@ public class TestBuyer {
 		buyer1.issueOffer(auction, new Long(80));
 		assertTrue(buyer.getListAlertBean().isEmpty());
 	}
-	
+
+	/**
+	 * Teste la désactivation de l'alerte d'annulation d'une enchère par un vendeur
+	 */
 	@Test
 	public void testDisableCancelAuctionAlert() {
 		System.out.println("=== testDisableCancelAuctionAlert ===");
@@ -168,6 +207,9 @@ public class TestBuyer {
 		assertTrue(buyer.getListAlertBean().isEmpty());
 	}
 	
+	/**
+	 * Teste la désactivation de l'alerte lorsqu'une offre est suppérieure à l'acheteur courant
+	 */
 	@Test
 	public void testDisableGreaterOfferOnAuctionAlert() {
 		System.out.println("=== testDisableGreaterOfferOnAuctionAlert ===");
@@ -181,6 +223,9 @@ public class TestBuyer {
 		assertTrue(buyer.getListAlertBean().isEmpty());
 	}
 	
+	/**
+	 * Teste de la désactivation de toutes les alertes sur une enchère
+	 */
 	@Test
 	public void testDisableAllAlertOnAuction() {
 		System.out.println("=== testDisableAllAlertOnAuction ===");
