@@ -1,10 +1,7 @@
-/**
- * 
- */
 package fr.auctionSystem.bean;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class OfferBean {

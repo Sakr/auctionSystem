@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.tests;
 
 import static org.junit.Assert.*;
@@ -19,7 +16,7 @@ import fr.auctionSystem.util.Clock;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class TestSeller {

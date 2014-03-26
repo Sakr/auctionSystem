@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.tests;
 
 import static org.junit.Assert.*;
@@ -12,7 +9,7 @@ import fr.auctionSystem.classes.AuctionSystem;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class TestAuctionSystem {

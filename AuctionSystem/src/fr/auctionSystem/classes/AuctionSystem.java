@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.classes;
 
 import java.util.HashMap;
@@ -14,7 +11,7 @@ import fr.auctionSystem.util.Messages;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class AuctionSystem {
@@ -24,7 +21,15 @@ public class AuctionSystem {
 	public AuctionSystem() {
 		
 	}
-
+	
+	/**
+	 * 
+	 * @param login
+	 * @param firstName
+	 * @param secondName
+	 * @param role
+	 * @return True si l'utilisateur a ete cree, False sinon 
+	 */
 	public boolean createUser(String login, String firstName, String secondName, RoleEnum role) {
 		//On creer un utilisateur 
 		User user=new User(login,firstName,secondName,role);
@@ -35,11 +40,17 @@ public class AuctionSystem {
 		}else{
 			System.out.println(Messages.USER_ALREADY_EXIST);
 		}
-		return isInMap(user);
+		return !isInMap(user);
 	}
 	
 	/**
-	 * Cette methode prend en parametre un utilisateur, et retourne la liste de toutes les offres visible pour un utilisateur donn�
+	 * Cette methode prend en parametre un utilisateur, et retourne la liste de toutes les encheres visible pour un lui
+	 * 
+	 * cette liste sera composé de deux parties:
+	 * 
+	 * - Une partie visible par tous les utilisateurs du systeme composee des encheres publiees
+	 * - Une partie annulee visible que par l'utilisateur ayant emis cette offre, et par les utilisateurs qui ont emis au moins une offre dessus
+	 *  
 	 */
 	public Map<Integer, AuctionBean> getListOfVisilbleAuctionForUser(User user) {
 		Map<Integer,AuctionBean>  listVisilbleAuctionBean=new HashMap<Integer,AuctionBean>();
@@ -92,12 +103,18 @@ public class AuctionSystem {
 		return listVisilbleAuctionBean;
 	}
 
-	
+	/**
+	 * 
+	 * @param login
+	 * @return l'utilisateur 
+	 */
 	public User getUserByLogin(String login) {
 		User user=null;
+		//On parcour l'hashmap pour chercher l'utilisateur en fonction de son login 
 		for (String mapKey : userMap.keySet()) {
 			if(mapKey.equals(login)){
 				 user=userMap.get(mapKey);
+				 break;
 			 }
 		}
 		if(user==null){
@@ -109,6 +126,7 @@ public class AuctionSystem {
 	/**
 	 * @param user
 	 * @return boolean 
+	 * Cette methode verifie si l'utilisateur qu'on essaye de creer est sur la liste
 	 */
 	private boolean isInMap(User user) {
 		ObjectComparator userCamparator=new ObjectComparator();
@@ -116,6 +134,7 @@ public class AuctionSystem {
 		for (String mapKey : userMap.keySet()) {
 			 if(userCamparator.compare(user,userMap.get(mapKey))==0){
 				 Exist=true;
+				 break;
 			 }
 		}
 		return Exist;

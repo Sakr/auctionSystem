@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.bean;
 
 import fr.auctionSystem.classes.User;
@@ -8,10 +5,12 @@ import fr.auctionSystem.util.AlertType;
 
 
 /**
- * @author david
- *
+ * @author 
+ * L'orsqu'une alerte est lancé, on construit ce bean avec les données qu'on veux transmettre a l'observeur
  */
 public class AlertContextBean {
+	
+	
 	private Object alertObject;
 	private User alertUser;
 	private AlertType alertType;

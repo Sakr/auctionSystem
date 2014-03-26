@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.classes;
 
 import java.util.Date;
@@ -20,7 +17,7 @@ import fr.auctionSystem.util.Messages;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class User extends UserBean implements SellerRole, BuyerRole {

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.bean;
 
 import java.util.ArrayList;
@@ -10,7 +7,7 @@ import java.util.Map;
 import fr.auctionSystem.util.RoleEnum;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class UserBean {

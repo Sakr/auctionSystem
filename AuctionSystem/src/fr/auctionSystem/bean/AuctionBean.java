@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.bean;
 
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Clock;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class AuctionBean extends Observable implements Observer {
@@ -59,6 +56,7 @@ public class AuctionBean extends Observable implements Observer {
 		this.minimumPrice = minimumPrice;
 		this.reservePrice = reservePrice;
 		this.creationClock.addObserver(this);
+		
 		AuctionBean.technicalAuctionId ++;
 	}
 	
@@ -208,12 +206,11 @@ public class AuctionBean extends Observable implements Observer {
 		listObserverAlert.add(userAlertObserver);
 		
 	}
-
+	
+	//
 	public void deleteAlertObserver(AlertObserver userAlertObserver) {
 		this.deleteObserver(userAlertObserver);
 		listObserverAlert.remove(userAlertObserver);
 		
 	}
-
-
 }

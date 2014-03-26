@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.util;
 
 import java.util.Calendar;
@@ -8,8 +5,9 @@ import java.util.Date;
 import java.util.Observable;
 
 /**
- * @author david
- *
+ * @author 
+ * Cette class nous permet de simuler le changement des jours pour realiser les tests sur le changement
+ * de l'etat d'une enchere vers terminee, lorsqu'elle depasse la date limite precisé 
  */
 public class Clock extends Observable {
 

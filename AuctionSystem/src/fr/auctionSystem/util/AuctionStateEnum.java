@@ -1,11 +1,8 @@
-/**
- * 
- */
 package fr.auctionSystem.util;
 
 /**
- * @author david
- *
+ * @author 
+ * Cette class d'enumeration repertorie les differents etat qu'une enchere peut avoir 
  */
 public enum AuctionStateEnum {
 

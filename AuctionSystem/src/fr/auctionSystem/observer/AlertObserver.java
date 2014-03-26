@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.auctionSystem.observer;
 
 import java.util.Observable;
@@ -17,7 +14,7 @@ import fr.auctionSystem.util.AuctionStateEnum;
 import fr.auctionSystem.util.Messages;
 
 /**
- * @author david
+ * @author 
  *
  */
 public class AlertObserver extends AlertContextBean implements Observer {

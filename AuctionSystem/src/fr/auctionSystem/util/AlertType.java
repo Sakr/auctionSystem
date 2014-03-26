@@ -1,10 +1,7 @@
-/**
- * 
- */
 package fr.auctionSystem.util;
 
 /**
- * @author david
+ * @author 
  *
  */
 public enum AlertType {
